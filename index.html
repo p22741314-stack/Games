@@ -231,12 +231,18 @@ const PRODUCTS = [{
 }];
 
 const CUSTOMERS = [
-  {name:'Mike T.',avatar:'🧔',interest:'Concealed Carry',budgetMin:300,budgetMax:400,moods:["Looking for something compact.","Any good pocket pistols?","My wife wants something light."]},
-  {name:'Sarah L.',avatar:'👩',interest:'Home Defense',budgetMin:280,budgetMax:450,moods:["Something reliable please.","I want easy to operate.","Heard the LCP Max is great!"]},
-  {name:'James R.',avatar:'👨‍🦲',interest:'Range Shooting',budgetMin:250,budgetMax:500,moods:["Just browsing today.","What's your best seller?","I shoot every weekend."]},
-  {name:'Carlos M.',avatar:'🧑',interest:'CCW Permit Holder',budgetMin:320,budgetMax:380,moods:["Need a CA compliant piece.","Stainless is a must.","Looking for daily carry."]},
-  {name:'Linda K.',avatar:'👩‍🦳',interest:'First-Time Buyer',budgetMin:200,budgetMax:350,moods:["My son recommended this shop.","Something simple please.","What do you recommend?"]},
-  {name:'Officer Dave',avatar:'👮',interest:'Off-Duty Carry',budgetMin:300,budgetMax:500,moods:["Need a compact backup gun.","Stainless holds up better.","What's your best seller?"]},
+  {name:'Mike T.',avatar:'🧔',interest:'Concealed Carry',budgetMin:400,budgetMax:700,moods:["Looking for something compact.","Any good pocket pistols?","What's reliable for daily carry?"]},
+  {name:'Sarah L.',avatar:'👩',interest:'Home Defense',budgetMin:500,budgetMax:800,moods:["Something reliable please.","I want easy to operate.","What do most people buy?"]},
+  {name:'James R.',avatar:'👨‍🦲',interest:'Range Shooting',budgetMin:450,budgetMax:900,moods:["Just browsing today.","What's your best seller?","I shoot every weekend."]},
+  {name:'Carlos M.',avatar:'🧑',interest:'CCW Permit Holder',budgetMin:400,budgetMax:750,moods:["Need a CA compliant piece.","Stainless is a must.","Looking for daily carry."]},
+  {name:'Linda K.',avatar:'👩‍🦳',interest:'First-Time Buyer',budgetMin:300,budgetMax:650,moods:["My son recommended this shop.","Something simple please.","What do you recommend?"]},
+  {name:'Officer Dave',avatar:'👮',interest:'Off-Duty Carry',budgetMin:500,budgetMax:900,moods:["Need a compact backup gun.","Stainless holds up better.","What's your best seller?"]},
+  {name:'Tony B.',avatar:'🧑‍🦱',interest:'Home Defense',budgetMin:550,budgetMax:850,moods:["I need something for the house.","What comes with a rail?","Glock fan right here."]},
+  {name:'Vanessa R.',avatar:'👩‍🦰',interest:'Competitive Shooting',budgetMin:500,budgetMax:1000,moods:["I compete on weekends.","Accuracy is everything to me.","What's most popular right now?"]},
+  {name:'Ray D.',avatar:'👴',interest:'Veteran / Collector',budgetMin:600,budgetMax:1200,moods:["Been shooting for 40 years.","I want the best you got.","What's new in stock?"]},
+  {name:'Jesse K.',avatar:'🧑‍🦳',interest:'Ranch / Outdoors',budgetMin:400,budgetMax:800,moods:["Need something reliable outdoors.","What holds up in the field?","Looking for something rugged."]},
+  {name:'Maria S.',avatar:'👩‍🦱',interest:'Personal Protection',budgetMin:350,budgetMax:700,moods:["My husband said to get a Glock.","What's easy to conceal?","I want something lightweight."]},
+  {name:'Detective Cruz',avatar:'🕵️',interest:'Duty/Backup Gun',budgetMin:600,budgetMax:1000,moods:["Need a solid backup piece.","What do you recommend for duty?","Reliability is non-negotiable."]},
 ];
 
 // ── SAVE / LOAD ──────────────────────────────────────────────
@@ -360,19 +366,33 @@ function nextCustomer() {
 }
 
 // ── ACTIONS ──────────────────────────────────────────────────
+const SALE_REACTIONS = [
+  "Thanks, I'll take it!","Perfect, exactly what I needed.","My wife is gonna love this.",
+  "Been looking for one of these.","Great price, I'll take it.","You just made my day.",
+  "Sold! Let's do the paperwork.","This is going straight to the safe.",
+];
+const PASS_REACTIONS = [
+  "I'll think about it...","Maybe next time.","A little out of my range.",
+  "I'll check around first.","Not today, thanks.",
+];
+
 function sellItem(id) {
   const p = state.products.find(x=>x.id===id), c = state.customer;
   if (!p||p.stock<=0) { showNotif('Out of stock!','error'); return; }
   if (c.budget < p.price) {
-    addLog(`${c.avatar} ${c.name} can't afford ${fmt(p.price)} (budget: ${fmt(c.budget)}).`,'fail');
+    const reaction = PASS_REACTIONS[Math.floor(Math.random()*PASS_REACTIONS.length)];
+    addLog(`${c.avatar} ${c.name}: "${reaction}" (budget ${fmt(c.budget)} < ${fmt(p.price)})`,'fail');
     showNotif(`${c.name} can't afford it!`,'error'); return;
   }
   const profit = p.price - p.cost;
+  const reaction = SALE_REACTIONS[Math.floor(Math.random()*SALE_REACTIONS.length)];
   p.stock--; state.cash+=p.price; state.totalSales++; state.daySales++;
   state.totalRevenue+=p.price; state.dayRevenue+=p.price;
-  if (Math.random()>0.6) state.rep = Math.min(5, state.rep+0.3);
-  addLog(`✅ SOLD to ${c.name} for ${fmt(p.price)} · profit +${fmt(profit)}`,'sale');
-  showNotif(`SALE! +${fmt(p.price)}`,'success');
+  state.totalProfit = (state.totalProfit||0) + profit;
+  state.dayProfit = (state.dayProfit||0) + profit;
+  if (Math.random()>0.5) state.rep = Math.min(5, state.rep+0.2);
+  addLog(`✅ ${c.name}: "${reaction}" — sold for ${fmt(p.price)} · +${fmt(profit)} profit`,'sale');
+  showNotif(`SALE! +${fmt(p.price)} 💰`,'success');
   saveGame(); updateHUD(); renderInventory(); nextCustomer();
 }
 
@@ -422,21 +442,24 @@ function showNotif(msg, type='info') {
 
 // ── DAY FLOW ─────────────────────────────────────────────────
 function endDay() {
-  const dayProfit = state.dayRevenue-(state.daySales*state.products[0].cost);
+  const dayProfit = state.dayProfit || 0;
+  const totalProfit = state.totalProfit || 0;
   document.getElementById('modal-day-label').textContent=`DAY ${state.day} SUMMARY`;
   document.getElementById('modal-next-day').textContent=state.day+1;
+  const repBar = '█'.repeat(Math.round(state.rep)) + '░'.repeat(5-Math.round(state.rep));
   document.getElementById('modal-stats').innerHTML=`
-    <div class="modal-stat"><span class="modal-stat-label">Sales Today</span><span class="modal-stat-value">${state.daySales}</span></div>
-    <div class="modal-stat"><span class="modal-stat-label">Revenue</span><span class="modal-stat-value positive">${fmt(state.dayRevenue)}</span></div>
-    <div class="modal-stat"><span class="modal-stat-label">Gross Profit</span><span class="modal-stat-value positive">${fmt(dayProfit)}</span></div>
-    <div class="modal-stat"><span class="modal-stat-label">Total Cash</span><span class="modal-stat-value positive">${fmt(state.cash)}</span></div>
-    <div class="modal-stat"><span class="modal-stat-label">Reputation</span><span class="modal-stat-value">${getRepStars()}</span></div>
-    <div class="modal-stat"><span class="modal-stat-label">All-Time Sales</span><span class="modal-stat-value">${state.totalSales}</span></div>`;
+    <div class="modal-stat"><span class="modal-stat-label">⚡ Sales Today</span><span class="modal-stat-value">${state.daySales}</span></div>
+    <div class="modal-stat"><span class="modal-stat-label">💵 Revenue Today</span><span class="modal-stat-value positive">${fmt(state.dayRevenue)}</span></div>
+    <div class="modal-stat"><span class="modal-stat-label">📈 Profit Today</span><span class="modal-stat-value positive">${fmt(dayProfit)}</span></div>
+    <div class="modal-stat"><span class="modal-stat-label">🏦 Total Cash</span><span class="modal-stat-value positive">${fmt(state.cash)}</span></div>
+    <div class="modal-stat"><span class="modal-stat-label">🏆 All-Time Sales</span><span class="modal-stat-value">${state.totalSales}</span></div>
+    <div class="modal-stat"><span class="modal-stat-label">💰 All-Time Profit</span><span class="modal-stat-value positive">${fmt(totalProfit)}</span></div>
+    <div class="modal-stat"><span class="modal-stat-label">⭐ Reputation</span><span class="modal-stat-value" style="color:var(--brass);letter-spacing:2px">${repBar}</span></div>`;
   document.getElementById('day-modal').classList.add('show');
 }
 
 function startNextDay() {
-  state.day++; state.daySales=0; state.dayRevenue=0;
+  state.day++; state.daySales=0; state.dayRevenue=0; state.dayProfit=0;
   document.getElementById('day-modal').classList.remove('show');
   addLog(`☀️ Day ${state.day} is open. Good luck!`,'info');
   saveGame(); nextCustomer(); updateHUD();
