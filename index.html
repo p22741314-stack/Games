@@ -4,620 +4,110 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Iron Range Gun Shop</title>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Roboto+Condensed:wght@300;400;700&display=swap" rel="stylesheet">
+<title>Iron Range Arms</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Roboto+Condensed:wght@300;400&display=swap" rel="stylesheet">
 <style>
   :root {
-    --steel: #2a2d30;
-    --dark: #1a1c1e;
-    --darker: #0f1012;
-    --brass: #c9a84c;
-    --brass-light: #e2c06e;
-    --brass-dark: #8a6e2a;
-    --silver: #9aa0a8;
-    --light: #e8eaed;
-    --red: #c0392b;
-    --green: #27ae60;
-    --panel: #222528;
+    --steel:#2a2d30; --dark:#1a1c1e; --darker:#0f1012;
+    --brass:#c9a84c; --brass-light:#e2c06e; --brass-dark:#8a6e2a;
+    --silver:#9aa0a8; --light:#e8eaed; --red:#c0392b;
+    --green:#27ae60; --panel:#1e2124;
   }
-
-- { margin: 0; padding: 0; box-sizing: border-box; }
-
-body {
-background: var(–darker);
-color: var(–light);
-font-family: ‘Roboto Condensed’, sans-serif;
-min-height: 100vh;
-overflow-x: hidden;
-}
-
-/* Background texture */
-body::before {
-content: ‘’;
-position: fixed;
-inset: 0;
-background-image: repeating-linear-gradient(
-0deg, transparent, transparent 2px,
-rgba(255,255,255,0.012) 2px, rgba(255,255,255,0.012) 4px
-);
-pointer-events: none;
-z-index: 0;
-}
-
-/* HEADER */
-header {
-background: linear-gradient(180deg, #0a0b0c 0%, var(–dark) 100%);
-border-bottom: 3px solid var(–brass);
-padding: 0 2rem;
-position: relative;
-z-index: 10;
-box-shadow: 0 4px 30px rgba(0,0,0,0.8);
-}
-
-.header-inner {
-max-width: 1100px;
-margin: 0 auto;
-display: flex;
-align-items: center;
-justify-content: space-between;
-padding: 1.2rem 0;
-gap: 1rem;
-}
-
-.shop-logo {
-display: flex;
-align-items: center;
-gap: 1rem;
-}
-
-.logo-icon {
-width: 52px;
-height: 52px;
-background: var(–brass);
-border-radius: 50%;
-display: flex;
-align-items: center;
-justify-content: center;
-font-size: 1.6rem;
-box-shadow: 0 0 20px rgba(201,168,76,0.4);
-flex-shrink: 0;
-}
-
-.shop-name {
-font-family: ‘Oswald’, sans-serif;
-font-size: 1.8rem;
-font-weight: 700;
-color: var(–brass);
-letter-spacing: 2px;
-text-transform: uppercase;
-line-height: 1;
-text-shadow: 0 0 20px rgba(201,168,76,0.3);
-}
-
-.shop-tagline {
-font-size: 0.75rem;
-color: var(–silver);
-letter-spacing: 3px;
-text-transform: uppercase;
-margin-top: 3px;
-}
-
-.header-stats {
-display: flex;
-gap: 1.5rem;
-align-items: center;
-}
-
-.stat-box {
-text-align: center;
-background: var(–panel);
-border: 1px solid rgba(201,168,76,0.25);
-border-radius: 6px;
-padding: 0.5rem 1rem;
-min-width: 90px;
-}
-
-.stat-label {
-font-size: 0.6rem;
-text-transform: uppercase;
-letter-spacing: 2px;
-color: var(–silver);
-}
-
-.stat-value {
-font-family: ‘Oswald’, sans-serif;
-font-size: 1.3rem;
-font-weight: 600;
-color: var(–brass);
-}
-
-#cash-display { color: var(–green); }
-#rep-display { color: var(–brass); }
-#day-display { color: var(–light); }
-
-/* MAIN LAYOUT */
-.game-wrapper {
-max-width: 1100px;
-margin: 0 auto;
-padding: 1.5rem 2rem;
-position: relative;
-z-index: 1;
-display: grid;
-grid-template-columns: 1fr 320px;
-gap: 1.5rem;
-}
-
-/* TICKER */
-.ticker {
-grid-column: 1 / -1;
-background: var(–steel);
-border: 1px solid rgba(201,168,76,0.2);
-border-radius: 6px;
-padding: 0.6rem 1rem;
-overflow: hidden;
-position: relative;
-}
-
-.ticker-inner {
-white-space: nowrap;
-display: inline-block;
-animation: ticker 30s linear infinite;
-font-size: 0.8rem;
-color: var(–brass-light);
-letter-spacing: 1px;
-}
-
-@keyframes ticker {
-0% { transform: translateX(100vw); }
-100% { transform: translateX(-100%); }
-}
-
-/* INVENTORY PANEL */
-.panel {
-background: var(–panel);
-border: 1px solid rgba(201,168,76,0.2);
-border-radius: 8px;
-overflow: hidden;
-box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-}
-
-.panel-header {
-background: linear-gradient(90deg, var(–steel) 0%, rgba(201,168,76,0.08) 100%);
-border-bottom: 2px solid var(–brass);
-padding: 0.8rem 1.2rem;
-display: flex;
-align-items: center;
-gap: 0.6rem;
-}
-
-.panel-title {
-font-family: ‘Oswald’, sans-serif;
-font-size: 1rem;
-font-weight: 600;
-letter-spacing: 2px;
-text-transform: uppercase;
-color: var(–brass);
-}
-
-.panel-body { padding: 1rem; }
-
-/* PRODUCT CARD */
-.product-card {
-background: linear-gradient(135deg, #1e2124 0%, #252830 100%);
-border: 1px solid rgba(201,168,76,0.3);
-border-radius: 8px;
-padding: 1.2rem;
-margin-bottom: 1rem;
-transition: border-color 0.2s, box-shadow 0.2s;
-position: relative;
-overflow: hidden;
-}
-
-.product-card::before {
-content: ‘’;
-position: absolute;
-top: 0; left: 0; right: 0;
-height: 2px;
-background: linear-gradient(90deg, transparent, var(–brass), transparent);
-opacity: 0;
-transition: opacity 0.2s;
-}
-
-.product-card:hover {
-border-color: var(–brass);
-box-shadow: 0 4px 20px rgba(201,168,76,0.15);
-}
-
-.product-card:hover::before { opacity: 1; }
-
-.product-top {
-display: flex;
-justify-content: space-between;
-align-items: flex-start;
-gap: 1rem;
-margin-bottom: 0.8rem;
-}
-
-.product-name {
-font-family: ‘Oswald’, sans-serif;
-font-size: 1.05rem;
-font-weight: 600;
-color: var(–light);
-line-height: 1.3;
-flex: 1;
-}
-
-.product-price {
-font-family: ‘Oswald’, sans-serif;
-font-size: 1.4rem;
-font-weight: 700;
-color: var(–green);
-white-space: nowrap;
-text-shadow: 0 0 10px rgba(39,174,96,0.3);
-}
-
-.product-badges {
-display: flex;
-gap: 0.4rem;
-flex-wrap: wrap;
-margin-bottom: 0.8rem;
-}
-
-.badge {
-font-size: 0.6rem;
-font-weight: 700;
-letter-spacing: 1.5px;
-text-transform: uppercase;
-padding: 2px 8px;
-border-radius: 3px;
-border: 1px solid;
-}
-
-.badge-ca { background: rgba(192,57,43,0.15); color: #e74c3c; border-color: rgba(192,57,43,0.4); }
-.badge-stainless { background: rgba(154,160,168,0.15); color: var(–silver); border-color: rgba(154,160,168,0.4); }
-.badge-new { background: rgba(39,174,96,0.15); color: var(–green); border-color: rgba(39,174,96,0.4); }
-
-.product-specs {
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 0.4rem;
-margin-bottom: 1rem;
-font-size: 0.78rem;
-color: var(–silver);
-}
-
-.spec-item { display: flex; gap: 0.4rem; align-items: center; }
-.spec-item::before { content: ‘▸’; color: var(–brass-dark); font-size: 0.6rem; }
-
-.product-stock {
-display: flex;
-align-items: center;
-justify-content: space-between;
-margin-bottom: 0.8rem;
-}
-
-.stock-label { font-size: 0.75rem; color: var(–silver); text-transform: uppercase; letter-spacing: 1px; }
-
-.stock-bar {
-flex: 1;
-height: 4px;
-background: var(–steel);
-border-radius: 2px;
-margin: 0 0.8rem;
-overflow: hidden;
-}
-
-.stock-fill {
-height: 100%;
-border-radius: 2px;
-background: linear-gradient(90deg, var(–brass-dark), var(–brass));
-transition: width 0.4s ease;
-}
-
-.stock-count {
-font-family: ‘Oswald’, sans-serif;
-font-size: 0.9rem;
-color: var(–brass);
-min-width: 30px;
-text-align: right;
-}
-
-.product-actions {
-display: flex;
-gap: 0.6rem;
-}
-
-/* BUTTONS */
-.btn {
-font-family: ‘Oswald’, sans-serif;
-font-size: 0.85rem;
-font-weight: 600;
-letter-spacing: 1.5px;
-text-transform: uppercase;
-padding: 0.55rem 1rem;
-border: none;
-border-radius: 5px;
-cursor: pointer;
-transition: all 0.15s;
-flex: 1;
-}
-
-.btn-sell {
-background: linear-gradient(135deg, var(–brass-dark), var(–brass));
-color: var(–darker);
-box-shadow: 0 2px 8px rgba(201,168,76,0.3);
-}
-
-.btn-sell:hover {
-background: linear-gradient(135deg, var(–brass), var(–brass-light));
-box-shadow: 0 4px 16px rgba(201,168,76,0.5);
-transform: translateY(-1px);
-}
-
-.btn-sell:active { transform: translateY(0); }
-
-.btn-sell:disabled {
-background: var(–steel);
-color: var(–silver);
-cursor: not-allowed;
-box-shadow: none;
-transform: none;
-}
-
-.btn-restock {
-background: transparent;
-color: var(–silver);
-border: 1px solid rgba(154,160,168,0.3);
-}
-
-.btn-restock:hover {
-border-color: var(–silver);
-color: var(–light);
-background: rgba(154,160,168,0.08);
-}
-
-/* RIGHT SIDEBAR */
-.sidebar { display: flex; flex-direction: column; gap: 1.2rem; }
-
-/* CUSTOMER */
-.customer-card {
-background: linear-gradient(135deg, #1e2124, #252830);
-border: 1px solid rgba(201,168,76,0.25);
-border-radius: 8px;
-padding: 1.2rem;
-text-align: center;
-position: relative;
-overflow: hidden;
-}
-
-.customer-avatar {
-width: 64px;
-height: 64px;
-border-radius: 50%;
-background: var(–steel);
-border: 3px solid var(–brass);
-margin: 0 auto 0.8rem;
-display: flex;
-align-items: center;
-justify-content: center;
-font-size: 2rem;
-box-shadow: 0 0 20px rgba(201,168,76,0.2);
-transition: all 0.3s;
-}
-
-.customer-name {
-font-family: ‘Oswald’, sans-serif;
-font-size: 1.1rem;
-color: var(–light);
-margin-bottom: 0.2rem;
-}
-
-.customer-interest {
-font-size: 0.75rem;
-color: var(–silver);
-letter-spacing: 1px;
-text-transform: uppercase;
-margin-bottom: 0.8rem;
-}
-
-.customer-budget {
-display: inline-block;
-background: rgba(39,174,96,0.12);
-border: 1px solid rgba(39,174,96,0.3);
-border-radius: 4px;
-padding: 0.3rem 0.8rem;
-font-family: ‘Oswald’, sans-serif;
-color: var(–green);
-font-size: 1rem;
-margin-bottom: 0.8rem;
-}
-
-.customer-mood {
-font-size: 0.75rem;
-color: var(–silver);
-font-style: italic;
-}
-
-.next-customer-btn {
-margin-top: 0.8rem;
-width: 100%;
-background: var(–steel);
-color: var(–silver);
-border: 1px solid rgba(154,160,168,0.2);
-border-radius: 5px;
-padding: 0.5rem;
-font-family: ‘Oswald’, sans-serif;
-font-size: 0.8rem;
-letter-spacing: 1.5px;
-text-transform: uppercase;
-cursor: pointer;
-transition: all 0.2s;
-}
-
-.next-customer-btn:hover { border-color: var(–silver); color: var(–light); }
-
-/* LOG */
-.log-panel { flex: 1; }
-
-.log-entries {
-max-height: 220px;
-overflow-y: auto;
-padding: 0.5rem;
-}
-
-.log-entries::-webkit-scrollbar { width: 4px; }
-.log-entries::-webkit-scrollbar-track { background: var(–darker); }
-.log-entries::-webkit-scrollbar-thumb { background: var(–brass-dark); border-radius: 2px; }
-
-.log-entry {
-font-size: 0.78rem;
-padding: 0.4rem 0.5rem;
-border-radius: 4px;
-margin-bottom: 0.3rem;
-border-left: 3px solid;
-animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-from { opacity: 0; transform: translateX(-8px); }
-to { opacity: 1; transform: translateX(0); }
-}
-
-.log-sale { border-color: var(–green); background: rgba(39,174,96,0.07); color: #a0ddb5; }
-.log-restock { border-color: var(–brass); background: rgba(201,168,76,0.07); color: #d4b86a; }
-.log-info { border-color: var(–silver); background: rgba(154,160,168,0.07); color: var(–silver); }
-.log-fail { border-color: var(–red); background: rgba(192,57,43,0.07); color: #e07070; }
-
-/* END DAY BUTTON */
-.end-day-btn {
-width: 100%;
-background: linear-gradient(135deg, #1a0a0a, #2a0f0f);
-border: 2px solid var(–red);
-color: #e07070;
-font-family: ‘Oswald’, sans-serif;
-font-size: 1rem;
-font-weight: 700;
-letter-spacing: 3px;
-text-transform: uppercase;
-padding: 0.8rem;
-border-radius: 6px;
-cursor: pointer;
-transition: all 0.2s;
-box-shadow: 0 0 20px rgba(192,57,43,0.1);
-}
-
-.end-day-btn:hover {
-background: linear-gradient(135deg, #2a0f0f, #3d1515);
-box-shadow: 0 0 30px rgba(192,57,43,0.3);
-color: #ff9999;
-}
-
-/* NOTIFICATION */
-#notification {
-position: fixed;
-top: 20px;
-right: 20px;
-z-index: 1000;
-padding: 0.8rem 1.4rem;
-border-radius: 6px;
-font-family: ‘Oswald’, sans-serif;
-font-size: 1rem;
-letter-spacing: 1px;
-opacity: 0;
-transform: translateX(40px);
-transition: all 0.3s ease;
-box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-pointer-events: none;
-max-width: 300px;
-}
-
-#notification.show { opacity: 1; transform: translateX(0); }
-#notification.success { background: rgba(39,174,96,0.9); color: #fff; border-left: 4px solid var(–green); }
-#notification.error { background: rgba(192,57,43,0.9); color: #fff; border-left: 4px solid var(–red); }
-#notification.info { background: rgba(201,168,76,0.9); color: var(–darker); border-left: 4px solid var(–brass-dark); }
-
-/* DAY SUMMARY MODAL */
-.modal-overlay {
-position: fixed;
-inset: 0;
-background: rgba(0,0,0,0.85);
-z-index: 500;
-display: flex;
-align-items: center;
-justify-content: center;
-opacity: 0;
-pointer-events: none;
-transition: opacity 0.3s;
-}
-
-.modal-overlay.show { opacity: 1; pointer-events: all; }
-
-.modal {
-background: var(–panel);
-border: 2px solid var(–brass);
-border-radius: 10px;
-padding: 2rem;
-max-width: 400px;
-width: 90%;
-text-align: center;
-box-shadow: 0 20px 80px rgba(0,0,0,0.8), 0 0 40px rgba(201,168,76,0.15);
-}
-
-.modal-title {
-font-family: ‘Oswald’, sans-serif;
-font-size: 1.8rem;
-color: var(–brass);
-letter-spacing: 3px;
-margin-bottom: 0.5rem;
-}
-
-.modal-sub { font-size: 0.85rem; color: var(–silver); letter-spacing: 2px; margin-bottom: 1.5rem; }
-
-.modal-stat {
-display: flex;
-justify-content: space-between;
-padding: 0.5rem 0;
-border-bottom: 1px solid rgba(255,255,255,0.06);
-font-size: 0.9rem;
-}
-
-.modal-stat-label { color: var(–silver); }
-.modal-stat-value { font-family: ‘Oswald’, sans-serif; color: var(–light); font-size: 1rem; }
-.modal-stat-value.positive { color: var(–green); }
-
-.modal-btn {
-margin-top: 1.5rem;
-width: 100%;
-background: linear-gradient(135deg, var(–brass-dark), var(–brass));
-color: var(–darker);
-border: none;
-border-radius: 6px;
-padding: 0.8rem;
-font-family: ‘Oswald’, sans-serif;
-font-size: 1.1rem;
-font-weight: 700;
-letter-spacing: 2px;
-text-transform: uppercase;
-cursor: pointer;
-transition: all 0.2s;
-}
-
-.modal-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
-
-/* Shine on cards */
-.product-card::after {
-content: ‘’;
-position: absolute;
-top: -50%;
-left: -60%;
-width: 40%;
-height: 200%;
-background: linear-gradient(90deg, transparent, rgba(255,255,255,0.02), transparent);
-transform: rotate(20deg);
-transition: left 0.6s;
-pointer-events: none;
-}
-.product-card:hover::after { left: 120%; }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--darker);color:var(--light);font-family:'Roboto Condensed',sans-serif;min-height:100vh;font-size:14px;}
+
+header{background:linear-gradient(180deg,#0a0b0c,var(–dark));border-bottom:2px solid var(–brass);padding:0 1rem;}
+.header-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0.55rem 0;gap:0.8rem;}
+.shop-logo{display:flex;align-items:center;gap:0.55rem;}
+.logo-icon{width:34px;height:34px;background:var(–brass);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.shop-name{font-family:‘Oswald’,sans-serif;font-size:1.15rem;font-weight:700;color:var(–brass);letter-spacing:2px;text-transform:uppercase;line-height:1;}
+.shop-tagline{font-size:0.58rem;color:var(–silver);letter-spacing:2px;text-transform:uppercase;}
+.header-stats{display:flex;gap:0.4rem;}
+.stat-box{text-align:center;background:var(–panel);border:1px solid rgba(201,168,76,0.2);border-radius:5px;padding:0.28rem 0.55rem;min-width:66px;}
+.stat-label{font-size:0.52rem;text-transform:uppercase;letter-spacing:1.5px;color:var(–silver);}
+.stat-value{font-family:‘Oswald’,sans-serif;font-size:0.95rem;font-weight:600;color:var(–brass);}
+#cash-display{color:var(–green);}
+
+.game-wrapper{max-width:900px;margin:0 auto;padding:0.7rem 1rem;display:grid;grid-template-columns:1fr 255px;gap:0.7rem;}
+
+.ticker{grid-column:1/-1;background:var(–steel);border:1px solid rgba(201,168,76,0.15);border-radius:4px;padding:0.3rem 0.7rem;overflow:hidden;}
+.ticker-inner{white-space:nowrap;display:inline-block;animation:ticker 28s linear infinite;font-size:0.7rem;color:var(–brass-light);letter-spacing:1px;}
+@keyframes ticker{0%{transform:translateX(100vw)}100%{transform:translateX(-100%)}}
+
+.broke-banner{grid-column:1/-1;background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.35);border-radius:4px;padding:0.45rem 0.8rem;font-size:0.74rem;color:#e07070;text-align:center;display:none;}
+.broke-banner.show{display:block;}
+
+.panel{background:var(–panel);border:1px solid rgba(201,168,76,0.18);border-radius:7px;overflow:hidden;}
+.panel-header{background:linear-gradient(90deg,var(–steel),rgba(201,168,76,0.06));border-bottom:1px solid var(–brass);padding:0.45rem 0.75rem;display:flex;align-items:center;gap:0.4rem;}
+.panel-title{font-family:‘Oswald’,sans-serif;font-size:0.82rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(–brass);}
+.panel-body{padding:0.65rem;}
+
+.product-card{background:linear-gradient(135deg,#1a1d20,#20242a);border:1px solid rgba(201,168,76,0.22);border-radius:6px;padding:0.75rem;margin-bottom:0.5rem;transition:border-color 0.2s;}
+.product-card:hover{border-color:var(–brass);}
+.product-top{display:flex;justify-content:space-between;align-items:flex-start;gap:0.6rem;margin-bottom:0.45rem;}
+.product-name{font-family:‘Oswald’,sans-serif;font-size:0.88rem;font-weight:600;color:var(–light);line-height:1.3;flex:1;}
+.product-price{font-family:‘Oswald’,sans-serif;font-size:1.15rem;font-weight:700;color:var(–green);white-space:nowrap;}
+.product-badges{display:flex;gap:0.28rem;flex-wrap:wrap;margin-bottom:0.45rem;}
+.badge{font-size:0.52rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 5px;border-radius:3px;border:1px solid;}
+.badge-cacompliant{background:rgba(192,57,43,0.1);color:#e74c3c;border-color:rgba(192,57,43,0.3);}
+.badge-stainless{background:rgba(154,160,168,0.1);color:var(–silver);border-color:rgba(154,160,168,0.3);}
+.badge-new{background:rgba(39,174,96,0.1);color:var(–green);border-color:rgba(39,174,96,0.3);}
+.product-specs{display:flex;flex-wrap:wrap;gap:0.2rem 0.7rem;margin-bottom:0.5rem;font-size:0.67rem;color:var(–silver);}
+.spec-item::before{content:’▸ ’;color:var(–brass-dark);font-size:0.58rem;}
+.product-stock{display:flex;align-items:center;margin-bottom:0.5rem;gap:0.45rem;}
+.stock-label{font-size:0.62rem;color:var(–silver);text-transform:uppercase;letter-spacing:1px;white-space:nowrap;}
+.stock-bar{flex:1;height:3px;background:var(–steel);border-radius:2px;overflow:hidden;}
+.stock-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(–brass-dark),var(–brass));transition:width 0.4s;}
+.stock-count{font-family:‘Oswald’,sans-serif;font-size:0.78rem;color:var(–brass);min-width:26px;text-align:right;}
+.product-actions{display:flex;gap:0.35rem;}
+.btn{font-family:‘Oswald’,sans-serif;font-size:0.72rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:0.38rem 0.6rem;border:none;border-radius:4px;cursor:pointer;transition:all 0.15s;flex:1;}
+.btn-sell{background:linear-gradient(135deg,var(–brass-dark),var(–brass));color:var(–darker);}
+.btn-sell:hover{filter:brightness(1.12);transform:translateY(-1px);}
+.btn-sell:active{transform:translateY(0);}
+.btn-sell:disabled{background:var(–steel);color:var(–silver);cursor:not-allowed;transform:none;filter:none;}
+.btn-restock{background:transparent;color:var(–silver);border:1px solid rgba(154,160,168,0.22);font-size:0.65rem;}
+.btn-restock:hover{border-color:var(–silver);color:var(–light);}
+
+.sidebar{display:flex;flex-direction:column;gap:0.7rem;}
+.customer-card{text-align:center;padding:0.4rem 0;}
+.customer-avatar{width:44px;height:44px;border-radius:50%;background:var(–steel);border:2px solid var(–brass);margin:0 auto 0.45rem;display:flex;align-items:center;justify-content:center;font-size:1.4rem;}
+.customer-name{font-family:‘Oswald’,sans-serif;font-size:0.9rem;color:var(–light);margin-bottom:0.12rem;}
+.customer-interest{font-size:0.62rem;color:var(–silver);letter-spacing:1px;text-transform:uppercase;margin-bottom:0.35rem;}
+.customer-budget{display:inline-block;background:rgba(39,174,96,0.1);border:1px solid rgba(39,174,96,0.22);border-radius:4px;padding:0.18rem 0.55rem;font-family:‘Oswald’,sans-serif;color:var(–green);font-size:0.85rem;margin-bottom:0.35rem;}
+.customer-mood{font-size:0.67rem;color:var(–silver);font-style:italic;margin-bottom:0.55rem;}
+.next-customer-btn{width:100%;background:var(–steel);color:var(–silver);border:1px solid rgba(154,160,168,0.16);border-radius:4px;padding:0.32rem;font-family:‘Oswald’,sans-serif;font-size:0.68rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+.next-customer-btn:hover{border-color:var(–silver);color:var(–light);}
+
+.log-entries{max-height:150px;overflow-y:auto;}
+.log-entries::-webkit-scrollbar{width:3px;}
+.log-entries::-webkit-scrollbar-thumb{background:var(–brass-dark);border-radius:2px;}
+.log-entry{font-size:0.67rem;padding:0.28rem 0.38rem;border-radius:3px;margin-bottom:0.22rem;border-left:2px solid;animation:fadeIn 0.3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateX(-5px)}to{opacity:1;transform:translateX(0)}}
+.log-sale{border-color:var(–green);background:rgba(39,174,96,0.06);color:#a0ddb5;}
+.log-restock{border-color:var(–brass);background:rgba(201,168,76,0.06);color:#d4b86a;}
+.log-info{border-color:var(–silver);background:rgba(154,160,168,0.05);color:var(–silver);}
+.log-fail{border-color:var(–red);background:rgba(192,57,43,0.06);color:#e07070;}
+
+.end-day-btn{width:100%;background:linear-gradient(135deg,#1a0a0a,#2a0f0f);border:1px solid var(–red);color:#e07070;font-family:‘Oswald’,sans-serif;font-size:0.82rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:0.55rem;border-radius:5px;cursor:pointer;transition:all 0.2s;}
+.end-day-btn:hover{background:linear-gradient(135deg,#2a0f0f,#3d1515);color:#ff9999;}
+
+#notification{position:fixed;top:12px;right:12px;z-index:1000;padding:0.55rem 1rem;border-radius:5px;font-family:‘Oswald’,sans-serif;font-size:0.85rem;letter-spacing:1px;opacity:0;transform:translateX(28px);transition:all 0.25s;pointer-events:none;max-width:240px;}
+#notification.show{opacity:1;transform:translateX(0);}
+#notification.success{background:rgba(39,174,96,0.92);color:#fff;border-left:3px solid var(–green);}
+#notification.error{background:rgba(192,57,43,0.92);color:#fff;border-left:3px solid var(–red);}
+#notification.info{background:rgba(201,168,76,0.92);color:var(–darker);border-left:3px solid var(–brass-dark);}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s;}
+.modal-overlay.show{opacity:1;pointer-events:all;}
+.modal{background:var(–panel);border:2px solid var(–brass);border-radius:8px;padding:1.4rem;max-width:340px;width:90%;text-align:center;}
+.modal-title{font-family:‘Oswald’,sans-serif;font-size:1.4rem;color:var(–brass);letter-spacing:3px;margin-bottom:0.25rem;}
+.modal-sub{font-size:0.72rem;color:var(–silver);letter-spacing:2px;margin-bottom:1.1rem;}
+.modal-stat{display:flex;justify-content:space-between;padding:0.35rem 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:0.82rem;}
+.modal-stat-label{color:var(–silver);}
+.modal-stat-value{font-family:‘Oswald’,sans-serif;color:var(–light);font-size:0.9rem;}
+.modal-stat-value.positive{color:var(–green);}
+.modal-btn{margin-top:1.1rem;width:100%;background:linear-gradient(135deg,var(–brass-dark),var(–brass));color:var(–darker);border:none;border-radius:5px;padding:0.6rem;font-family:‘Oswald’,sans-serif;font-size:0.9rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+.modal-btn:hover{filter:brightness(1.1);}
 </style>
 
 </head>
@@ -650,7 +140,7 @@ pointer-events: none;
       </div>
       <div class="stat-box">
         <div class="stat-label">Cash</div>
-        <div class="stat-value" id="cash-display">$5,000</div>
+        <div class="stat-value" id="cash-display">$0.00</div>
       </div>
       <div class="stat-box">
         <div class="stat-label">Sales</div>
@@ -658,7 +148,7 @@ pointer-events: none;
       </div>
       <div class="stat-box">
         <div class="stat-label">Rep</div>
-        <div class="stat-value" id="rep-display">★★★</div>
+        <div class="stat-value" id="rep-display">★★★☆☆</div>
       </div>
     </div>
   </div>
@@ -666,63 +156,44 @@ pointer-events: none;
 
 <div class="game-wrapper">
 
-  <!-- Ticker -->
-
   <div class="ticker">
-    <span class="ticker-inner">
-      ⬡ WELCOME TO IRON RANGE ARMS ⬡ TODAY'S FEATURED ITEM: RUGER LCP MAX — STAINLESS — CA COMPLIANT ⬡ REMEMBER: ALL SALES MUST COMPLY WITH STATE AND FEDERAL LAW ⬡ BACKGROUND CHECKS REQUIRED ON ALL FIREARM TRANSFERS ⬡ VISIT US AT THE RANGE EVERY WEEKEND ⬡
-    </span>
+    <span class="ticker-inner">⬡ IRON RANGE ARMS ⬡ FEATURED: RUGER LCP MAX STAINLESS — CA COMPLIANT — $329.99 ⬡ ALL TRANSFERS REQUIRE DROS & BACKGROUND CHECK ⬡ SELL GUNS · EARN PROFIT · BUILD YOUR REPUTATION ⬡</span>
   </div>
 
-  <!-- Inventory -->
+  <div class="broke-banner" id="broke-banner">
+    💡 Starting balance is $0.00 — sell guns to earn cash, then use profits to restock inventory!
+  </div>
 
   <div>
     <div class="panel">
-      <div class="panel-header">
-        <span>📦</span>
-        <span class="panel-title">Inventory</span>
-      </div>
-      <div class="panel-body" id="inventory-list">
-        <!-- Generated by JS -->
-      </div>
+      <div class="panel-header"><span>📦</span><span class="panel-title">Inventory</span></div>
+      <div class="panel-body" id="inventory-list"></div>
     </div>
   </div>
-
-  <!-- Sidebar -->
 
   <div class="sidebar">
+    <div class="panel">
+      <div class="panel-header"><span>👤</span><span class="panel-title">Customer</span></div>
+      <div class="panel-body">
+        <div class="customer-card">
+          <div class="customer-avatar" id="cust-avatar">🧔</div>
+          <div class="customer-name" id="cust-name">—</div>
+          <div class="customer-interest" id="cust-interest">Browsing</div>
+          <div class="customer-budget" id="cust-budget">$0.00</div>
+          <div class="customer-mood" id="cust-mood">"..."</div>
+          <button class="next-customer-btn" onclick="nextCustomer()">↻ Next Customer</button>
+        </div>
+      </div>
+    </div>
 
 ```
-<!-- Customer -->
 <div class="panel">
-  <div class="panel-header">
-    <span>👤</span>
-    <span class="panel-title">Today's Customer</span>
-  </div>
-  <div class="panel-body">
-    <div class="customer-card">
-      <div class="customer-avatar" id="cust-avatar">🧔</div>
-      <div class="customer-name" id="cust-name">Loading...</div>
-      <div class="customer-interest" id="cust-interest">Browsing...</div>
-      <div class="customer-budget" id="cust-budget">$0.00</div>
-      <div class="customer-mood" id="cust-mood">"..."</div>
-      <button class="next-customer-btn" onclick="nextCustomer()">↻ Next Customer</button>
-    </div>
-  </div>
-</div>
-
-<!-- Log -->
-<div class="panel log-panel">
-  <div class="panel-header">
-    <span>📋</span>
-    <span class="panel-title">Transaction Log</span>
-  </div>
-  <div class="panel-body" style="padding:0.5rem">
+  <div class="panel-header"><span>📋</span><span class="panel-title">Log</span></div>
+  <div class="panel-body" style="padding:0.38rem">
     <div class="log-entries" id="log"></div>
   </div>
 </div>
 
-<!-- End Day -->
 <button class="end-day-btn" onclick="endDay()">⬛ CLOSE SHOP</button>
 ```
 
@@ -730,98 +201,73 @@ pointer-events: none;
 </div>
 
 <script>
-const PRODUCTS = [
-  {
-    id: 'ruger_lcp_max',
-    name: 'Ruger LCP Max 2.8" Barrel No Thumb Safety, Stainless, 10 Rnds',
-    price: 329.99,
-    cost: 210.00,
-    stock: 5,
-    maxStock: 10,
-    restockCost: 210.00,
-    badges: ['CA Compliant', 'Stainless', 'New'],
-    specs: ['Caliber: .380 ACP', 'Barrel: 2.8"', 'Capacity: 10+1', 'Frame: Polymer', 'Finish: Stainless', 'Safety: No Thumb'],
-    emoji: '🔫',
-  }
-];
+const PRODUCTS = [{
+  id:'ruger_lcp_max',
+  name:'Ruger LCP Max 2.8" Barrel No Thumb Safety, Stainless, 10 Rnds',
+  price:329.99, cost:210.00, stock:5, maxStock:10, restockCost:210.00,
+  badges:['CA Compliant','Stainless','New'],
+  specs:['Caliber: .380 ACP','Barrel: 2.8"','Capacity: 10+1','Finish: Stainless','Safety: None'],
+  emoji:'🔫'
+}];
 
 const CUSTOMERS = [
-  { name:'Mike T.', avatar:'🧔', interest:'Concealed Carry', budgetMin:300, budgetMax:400, moods:["Looking for something compact.","My wife wants something light.","Any good pocket pistols?"] },
-  { name:'Sarah L.', avatar:'👩', interest:'Home Defense', budgetMin:280, budgetMax:450, moods:["Something reliable, please.","I want easy to operate.","Heard the LCP Max is great."] },
-  { name:'James R.', avatar:'👨‍🦲', interest:'Range Shooting', budgetMin:250, budgetMax:500, moods:["Just browsing today.","What's popular right now?","I shoot every weekend."] },
-  { name:'Carlos M.', avatar:'🧑', interest:'CCW Permit Holder', budgetMin:320, budgetMax:380, moods:["Looking for a CA compliant piece.","Stainless is a must for me.","Need something for daily carry."] },
-  { name:'Linda K.', avatar:'👩‍🦳', interest:'First-Time Buyer', budgetMin:200, budgetMax:350, moods:["My son recommended this shop.","Something simple, please.","What do you recommend?"] },
-  { name:'Officer Dave', avatar:'👮', interest:'Off-Duty Carry', budgetMin:300, budgetMax:500, moods:["Need a compact backup gun.","Stainless holds up better.","What's your best seller?"] },
+  {name:'Mike T.',avatar:'🧔',interest:'Concealed Carry',budgetMin:300,budgetMax:400,moods:["Looking for something compact.","Any good pocket pistols?","My wife wants something light."]},
+  {name:'Sarah L.',avatar:'👩',interest:'Home Defense',budgetMin:280,budgetMax:450,moods:["Something reliable please.","I want easy to operate.","Heard the LCP Max is great!"]},
+  {name:'James R.',avatar:'👨‍🦲',interest:'Range Shooting',budgetMin:250,budgetMax:500,moods:["Just browsing today.","What's your best seller?","I shoot every weekend."]},
+  {name:'Carlos M.',avatar:'🧑',interest:'CCW Permit Holder',budgetMin:320,budgetMax:380,moods:["Need a CA compliant piece.","Stainless is a must.","Looking for daily carry."]},
+  {name:'Linda K.',avatar:'👩‍🦳',interest:'First-Time Buyer',budgetMin:200,budgetMax:350,moods:["My son recommended this shop.","Something simple please.","What do you recommend?"]},
+  {name:'Officer Dave',avatar:'👮',interest:'Off-Duty Carry',budgetMin:300,budgetMax:500,moods:["Need a compact backup gun.","Stainless holds up better.","What's your best seller?"]},
 ];
 
 let state = {
-  cash: 5000,
-  day: 1,
-  totalSales: 0,
-  totalRevenue: 0,
-  dayRevenue: 0,
-  daySales: 0,
-  rep: 3,
-  products: JSON.parse(JSON.stringify(PRODUCTS)),
-  customer: null,
-  customersServed: 0,
+  cash:0, day:1, totalSales:0, totalRevenue:0,
+  dayRevenue:0, daySales:0, rep:3,
+  products:JSON.parse(JSON.stringify(PRODUCTS)), customer:null,
 };
 
-function fmt(n) {
-  return '$' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-}
-
-function getRepStars() {
-  const stars = Math.min(5, Math.max(1, state.rep));
-  return '★'.repeat(stars) + '☆'.repeat(5 - stars);
-}
+const fmt = n => '$' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+const getRepStars = () => { const s=Math.min(5,Math.max(1,Math.round(state.rep))); return '★'.repeat(s)+'☆'.repeat(5-s); };
 
 function updateHUD() {
   document.getElementById('day-display').textContent = state.day;
   document.getElementById('cash-display').textContent = fmt(state.cash);
   document.getElementById('sales-display').textContent = state.totalSales;
   document.getElementById('rep-display').textContent = getRepStars();
+  document.getElementById('broke-banner').classList.toggle('show', state.cash === 0);
 }
 
 function renderInventory() {
-  const container = document.getElementById('inventory-list');
-  container.innerHTML = '';
+  const c = document.getElementById('inventory-list');
+  c.innerHTML = '';
   state.products.forEach(p => {
-    const pct = (p.stock / p.maxStock) * 100;
-    const outOfStock = p.stock <= 0;
-    container.innerHTML += `
+    const pct = (p.stock/p.maxStock)*100, oos = p.stock<=0;
+    c.innerHTML += `
       <div class="product-card">
         <div class="product-top">
           <div class="product-name">${p.emoji} ${p.name}</div>
           <div class="product-price">${fmt(p.price)}</div>
         </div>
-        <div class="product-badges">
-          ${p.badges.map(b => `<span class="badge badge-${b.toLowerCase().replace(/[^a-z]/g,'')}">${b}</span>`).join('')}
-        </div>
-        <div class="product-specs">
-          ${p.specs.map(s => `<div class="spec-item">${s}</div>`).join('')}
-        </div>
+        <div class="product-badges">${p.badges.map(b=>`<span class="badge badge-${b.toLowerCase().replace(/[^a-z]/g,'')}">${b}</span>`).join('')}</div>
+        <div class="product-specs">${p.specs.map(s=>`<span class="spec-item">${s}</span>`).join('')}</div>
         <div class="product-stock">
           <span class="stock-label">Stock</span>
           <div class="stock-bar"><div class="stock-fill" style="width:${pct}%"></div></div>
           <span class="stock-count">${p.stock}/${p.maxStock}</span>
         </div>
         <div class="product-actions">
-          <button class="btn btn-sell" onclick="sellItem('${p.id}')" ${outOfStock ? 'disabled' : ''}>
-            ${outOfStock ? 'OUT OF STOCK' : '💰 SELL'}
+          <button class="btn btn-sell" onclick="sellItem('${p.id}')" ${oos?'disabled':''}>
+            ${oos?'OUT OF STOCK':'💰 SELL'}
           </button>
-          <button class="btn btn-restock" onclick="restock('${p.id}')">📦 RESTOCK (${fmt(p.restockCost)})</button>
+          <button class="btn btn-restock" onclick="restock('${p.id}')">📦 RESTOCK (${fmt(p.restockCost)}/ea)</button>
         </div>
-      </div>
-    `;
+      </div>`;
   });
 }
 
 function pickCustomer() {
-  const c = CUSTOMERS[Math.floor(Math.random() * CUSTOMERS.length)];
-  const budget = c.budgetMin + Math.random() * (c.budgetMax - c.budgetMin);
-  const mood = c.moods[Math.floor(Math.random() * c.moods.length)];
-  state.customer = { ...c, budget, mood };
+  const c = CUSTOMERS[Math.floor(Math.random()*CUSTOMERS.length)];
+  const budget = c.budgetMin + Math.random()*(c.budgetMax-c.budgetMin);
+  state.customer = {...c, budget, mood:c.moods[Math.floor(Math.random()*c.moods.length)]};
 }
 
 function renderCustomer() {
@@ -834,134 +280,83 @@ function renderCustomer() {
 }
 
 function nextCustomer() {
-  pickCustomer();
-  renderCustomer();
-  addLog(`${state.customer.avatar} ${state.customer.name} entered the shop.`, 'info');
+  pickCustomer(); renderCustomer();
+  addLog(`${state.customer.avatar} ${state.customer.name} entered the shop.`,'info');
 }
 
 function sellItem(id) {
-  const product = state.products.find(p => p.id === id);
-  const c = state.customer;
-
-  if (!product || product.stock <= 0) {
-    showNotif('Out of stock!', 'error');
-    return;
+  const p = state.products.find(x=>x.id===id), c = state.customer;
+  if (!p||p.stock<=0){showNotif('Out of stock!','error');return;}
+  if (c.budget<p.price){
+    addLog(`${c.avatar} ${c.name} can't afford ${fmt(p.price)} (budget: ${fmt(c.budget)}).`,'fail');
+    showNotif(`${c.name} can't afford it!`,'error'); return;
   }
-
-  if (c.budget < product.price) {
-    addLog(`${c.avatar} ${c.name} couldn't afford ${fmt(product.price)}.`, 'fail');
-    showNotif(`${c.name} can't afford it — budget: ${fmt(c.budget)}`, 'error');
-    return;
-  }
-
-  // Sale!
-  const profit = product.price - product.cost;
-  product.stock--;
-  state.cash += product.price;
-  state.totalSales++;
-  state.daySales++;
-  state.totalRevenue += product.price;
-  state.dayRevenue += product.price;
-  state.customersServed++;
-
-  addLog(`✅ SOLD: ${product.name} to ${c.name} for ${fmt(product.price)} (+${fmt(profit)} profit)`, 'sale');
-  showNotif(`SALE! +${fmt(product.price)}`, 'success');
-
-  // Bump rep occasionally
-  if (Math.random() > 0.6) state.rep = Math.min(5, state.rep + 0.5);
-
-  updateHUD();
-  renderInventory();
-  nextCustomer();
+  const profit = p.price-p.cost;
+  p.stock--; state.cash+=p.price; state.totalSales++; state.daySales++;
+  state.totalRevenue+=p.price; state.dayRevenue+=p.price;
+  if(Math.random()>0.6) state.rep=Math.min(5,state.rep+0.3);
+  addLog(`✅ SOLD to ${c.name} for ${fmt(p.price)} · profit +${fmt(profit)}`,'sale');
+  showNotif(`SALE! +${fmt(p.price)}`,'success');
+  updateHUD(); renderInventory(); nextCustomer();
 }
 
 function restock(id) {
-  const product = state.products.find(p => p.id === id);
-  const qty = product.maxStock - product.stock;
-  if (qty <= 0) { showNotif('Already at max stock!', 'error'); return; }
-
-  const totalCost = product.restockCost * qty;
-  if (state.cash < totalCost) {
-    showNotif(`Need ${fmt(totalCost)} to restock!`, 'error');
-    addLog(`❌ Can't afford restock — need ${fmt(totalCost)}`, 'fail');
-    return;
+  const p = state.products.find(x=>x.id===id);
+  const qty = p.maxStock-p.stock;
+  if(qty<=0){showNotif('Already fully stocked!','error');return;}
+  const cost = p.restockCost*qty;
+  if(state.cash<cost){
+    showNotif(`Need ${fmt(cost)} — you have ${fmt(state.cash)}`,'error');
+    addLog(`❌ Can't restock — need ${fmt(cost)}, have ${fmt(state.cash)}`,'fail'); return;
   }
-
-  state.cash -= totalCost;
-  product.stock = product.maxStock;
-  addLog(`📦 Restocked ${qty}x ${product.name} for ${fmt(totalCost)}`, 'restock');
-  showNotif(`Restocked ${qty} units`, 'info');
-  updateHUD();
-  renderInventory();
+  state.cash-=cost; p.stock=p.maxStock;
+  addLog(`📦 Restocked ${qty} units for ${fmt(cost)}`,'restock');
+  showNotif(`Restocked ${qty} units!`,'info');
+  updateHUD(); renderInventory();
 }
 
-function addLog(msg, type = 'info') {
-  const log = document.getElementById('log');
-  const entry = document.createElement('div');
-  entry.className = `log-entry log-${type}`;
-  const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  entry.textContent = `[${time}] ${msg}`;
-  log.prepend(entry);
-  // Keep max 30 entries
-  while (log.children.length > 30) log.removeChild(log.lastChild);
+function addLog(msg,type='info') {
+  const log=document.getElementById('log'), el=document.createElement('div');
+  el.className=`log-entry log-${type}`;
+  const t=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  el.textContent=`[${t}] ${msg}`; log.prepend(el);
+  while(log.children.length>25) log.removeChild(log.lastChild);
 }
 
 let notifTimer;
-function showNotif(msg, type = 'info') {
-  const el = document.getElementById('notification');
-  el.textContent = msg;
-  el.className = `show ${type}`;
+function showNotif(msg,type='info') {
+  const el=document.getElementById('notification');
+  el.textContent=msg; el.className=`show ${type}`;
   clearTimeout(notifTimer);
-  notifTimer = setTimeout(() => { el.className = ''; }, 2800);
+  notifTimer=setTimeout(()=>{el.className='';},2500);
 }
 
 function endDay() {
-  const modal = document.getElementById('day-modal');
-  document.getElementById('modal-day-label').textContent = `DAY ${state.day} SUMMARY`;
-  document.getElementById('modal-next-day').textContent = state.day + 1;
-
-  const profit = state.products.reduce((acc, p) => acc + (p.price - p.cost) * 0, 0); // simplified
-  const dayProfit = state.dayRevenue - (state.daySales * state.products[0].cost);
-
-  document.getElementById('modal-stats').innerHTML = `
+  const dayProfit=state.dayRevenue-(state.daySales*state.products[0].cost);
+  document.getElementById('modal-day-label').textContent=`DAY ${state.day} SUMMARY`;
+  document.getElementById('modal-next-day').textContent=state.day+1;
+  document.getElementById('modal-stats').innerHTML=`
     <div class="modal-stat"><span class="modal-stat-label">Sales Today</span><span class="modal-stat-value">${state.daySales}</span></div>
-    <div class="modal-stat"><span class="modal-stat-label">Revenue Today</span><span class="modal-stat-value positive">${fmt(state.dayRevenue)}</span></div>
+    <div class="modal-stat"><span class="modal-stat-label">Revenue</span><span class="modal-stat-value positive">${fmt(state.dayRevenue)}</span></div>
     <div class="modal-stat"><span class="modal-stat-label">Gross Profit</span><span class="modal-stat-value positive">${fmt(dayProfit)}</span></div>
     <div class="modal-stat"><span class="modal-stat-label">Total Cash</span><span class="modal-stat-value positive">${fmt(state.cash)}</span></div>
     <div class="modal-stat"><span class="modal-stat-label">Reputation</span><span class="modal-stat-value">${getRepStars()}</span></div>
-    <div class="modal-stat"><span class="modal-stat-label">All-Time Sales</span><span class="modal-stat-value">${state.totalSales}</span></div>
-  `;
-
-  modal.classList.add('show');
+    <div class="modal-stat"><span class="modal-stat-label">All-Time Sales</span><span class="modal-stat-value">${state.totalSales}</span></div>`;
+  document.getElementById('day-modal').classList.add('show');
 }
 
 function startNextDay() {
-  state.day++;
-  state.daySales = 0;
-  state.dayRevenue = 0;
+  state.day++; state.daySales=0; state.dayRevenue=0;
   document.getElementById('day-modal').classList.remove('show');
-  addLog(`☀️ Day ${state.day} opened. Good luck!`, 'info');
-  nextCustomer();
-  updateHUD();
-
-  // Random restock on some days
-  if (Math.random() > 0.5) {
-    addLog('📬 Supplier drop-off arrived overnight.', 'restock');
-  }
+  addLog(`☀️ Day ${state.day} is open. Good luck!`,'info');
+  nextCustomer(); updateHUD();
 }
 
 // INIT
-function init() {
-  pickCustomer();
-  renderCustomer();
-  renderInventory();
-  updateHUD();
-  addLog('🏪 Iron Range Arms is open for business!', 'info');
-  addLog('📋 Remember: All sales require background check (DROS).', 'info');
-  addLog(`${state.customer.avatar} ${state.customer.name} entered the shop.`, 'info');
-}
-
-init();
+pickCustomer(); renderCustomer(); renderInventory(); updateHUD();
+addLog('🏪 Iron Range Arms is open for business!','info');
+addLog('💡 Tip: Sell guns to earn cash, then restock with profits!','info');
+addLog(`${state.customer.avatar} ${state.customer.name} entered the shop.`,'info');
 </script>
 
 </body>
