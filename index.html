@@ -216,7 +216,7 @@ const SAVE_KEY = 'ironRangeArms_v1';
 const PRODUCTS = [{
   id:'ruger_lcp_max',
   name:'Ruger LCP Max 2.8" Barrel No Thumb Safety, Stainless, 10 Rnds',
-  price:329.99, cost:210.00, stock:5, maxStock:10, restockCost:210.00,
+  price:329.99, cost:210.00, stock:5, maxStock:10, restockCost:500.00,
   badges:['CA Compliant','Stainless','New'],
   specs:['Caliber: .380 ACP','Barrel: 2.8"','Capacity: 10+1','Finish: Stainless','Safety: None'],
   emoji:'🔫'
@@ -371,18 +371,30 @@ function sellItem(id) {
 
 function restock(id) {
   const p = state.products.find(x=>x.id===id);
-  const qty = p.maxStock - p.stock;
-  if (qty<=0) { showNotif('Already fully stocked!','error'); return; }
-  const cost = p.restockCost * qty;
+  if (p.stock >= p.maxStock) { showNotif('Already fully stocked!','error'); return; }
+  const cost = p.restockCost;
   if (state.cash < cost) {
     showNotif(`Need ${fmt(cost)} — you have ${fmt(state.cash)}`,'error');
     addLog(`❌ Can't restock — need ${fmt(cost)}, have ${fmt(state.cash)}`,'fail'); return;
   }
-  state.cash -= cost; p.stock = p.maxStock;
-  addLog(`📦 Restocked ${qty} units for ${fmt(cost)}`,'restock');
-  showNotif(`Restocked ${qty} units!`,'info');
+  state.cash -= cost; p.stock += 1;
+  addLog(`📦 Restocked 1 unit for ${fmt(cost)} · stock now ${p.stock}/${p.maxStock}`,'restock');
+  showNotif('+1 unit restocked!','info');
   saveGame(); updateHUD(); renderInventory();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // ── LOG & NOTIF ──────────────────────────────────────────────
 function addLog(msg, type='info') {
