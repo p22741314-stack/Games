@@ -7,41 +7,45 @@
 <title>Iron Range Arms</title>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Roboto+Condensed:wght@300;400&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --steel:#2a2d30; --dark:#1a1c1e; --darker:#0f1012;
-    --brass:#c9a84c; --brass-light:#e2c06e; --brass-dark:#8a6e2a;
-    --silver:#9aa0a8; --light:#e8eaed; --red:#c0392b;
-    --green:#27ae60; --panel:#1e2124;
-  }
+  :root{--steel:#2a2d30;--dark:#1a1c1e;--darker:#0f1012;--brass:#c9a84c;--brass-light:#e2c06e;--brass-dark:#8a6e2a;--silver:#9aa0a8;--light:#e8eaed;--red:#c0392b;--green:#27ae60;--panel:#1e2124;}
   *{margin:0;padding:0;box-sizing:border-box;}
   body{background:var(--darker);color:var(--light);font-family:'Roboto Condensed',sans-serif;min-height:100vh;font-size:14px;}
 
+/* HEADER */
 header{background:linear-gradient(180deg,#0a0b0c,var(–dark));border-bottom:2px solid var(–brass);padding:0 1rem;}
 .header-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0.55rem 0;gap:0.8rem;}
 .shop-logo{display:flex;align-items:center;gap:0.55rem;}
 .logo-icon{width:34px;height:34px;background:var(–brass);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
 .shop-name{font-family:‘Oswald’,sans-serif;font-size:1.15rem;font-weight:700;color:var(–brass);letter-spacing:2px;text-transform:uppercase;line-height:1;}
 .shop-tagline{font-size:0.58rem;color:var(–silver);letter-spacing:2px;text-transform:uppercase;}
+.header-right{display:flex;align-items:center;gap:0.6rem;}
 .header-stats{display:flex;gap:0.4rem;}
 .stat-box{text-align:center;background:var(–panel);border:1px solid rgba(201,168,76,0.2);border-radius:5px;padding:0.28rem 0.55rem;min-width:66px;}
 .stat-label{font-size:0.52rem;text-transform:uppercase;letter-spacing:1.5px;color:var(–silver);}
 .stat-value{font-family:‘Oswald’,sans-serif;font-size:0.95rem;font-weight:600;color:var(–brass);}
 #cash-display{color:var(–green);}
+.save-indicator{font-size:0.6rem;color:var(–silver);letter-spacing:1px;opacity:0;transition:opacity 0.4s;white-space:nowrap;}
+.save-indicator.show{opacity:1;}
+.btn-reset{background:transparent;color:#7a4040;border:1px solid rgba(192,57,43,0.25);border-radius:4px;padding:0.25rem 0.5rem;font-family:‘Oswald’,sans-serif;font-size:0.6rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+.btn-reset:hover{border-color:var(–red);color:#e07070;}
 
+/* LAYOUT */
 .game-wrapper{max-width:900px;margin:0 auto;padding:0.7rem 1rem;display:grid;grid-template-columns:1fr 255px;gap:0.7rem;}
-
 .ticker{grid-column:1/-1;background:var(–steel);border:1px solid rgba(201,168,76,0.15);border-radius:4px;padding:0.3rem 0.7rem;overflow:hidden;}
 .ticker-inner{white-space:nowrap;display:inline-block;animation:ticker 28s linear infinite;font-size:0.7rem;color:var(–brass-light);letter-spacing:1px;}
 @keyframes ticker{0%{transform:translateX(100vw)}100%{transform:translateX(-100%)}}
+.info-banner{grid-column:1/-1;border-radius:4px;padding:0.42rem 0.8rem;font-size:0.73rem;text-align:center;display:none;}
+.info-banner.show{display:block;}
+.info-banner.broke{background:rgba(192,57,43,0.09);border:1px solid rgba(192,57,43,0.3);color:#e07070;}
+.info-banner.welcome{background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);color:var(–brass-light);}
 
-.broke-banner{grid-column:1/-1;background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.35);border-radius:4px;padding:0.45rem 0.8rem;font-size:0.74rem;color:#e07070;text-align:center;display:none;}
-.broke-banner.show{display:block;}
-
+/* PANELS */
 .panel{background:var(–panel);border:1px solid rgba(201,168,76,0.18);border-radius:7px;overflow:hidden;}
 .panel-header{background:linear-gradient(90deg,var(–steel),rgba(201,168,76,0.06));border-bottom:1px solid var(–brass);padding:0.45rem 0.75rem;display:flex;align-items:center;gap:0.4rem;}
 .panel-title{font-family:‘Oswald’,sans-serif;font-size:0.82rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(–brass);}
 .panel-body{padding:0.65rem;}
 
+/* PRODUCT */
 .product-card{background:linear-gradient(135deg,#1a1d20,#20242a);border:1px solid rgba(201,168,76,0.22);border-radius:6px;padding:0.75rem;margin-bottom:0.5rem;transition:border-color 0.2s;}
 .product-card:hover{border-color:var(–brass);}
 .product-top{display:flex;justify-content:space-between;align-items:flex-start;gap:0.6rem;margin-bottom:0.45rem;}
@@ -68,6 +72,7 @@ header{background:linear-gradient(180deg,#0a0b0c,var(–dark));border-bottom:2px
 .btn-restock{background:transparent;color:var(–silver);border:1px solid rgba(154,160,168,0.22);font-size:0.65rem;}
 .btn-restock:hover{border-color:var(–silver);color:var(–light);}
 
+/* SIDEBAR */
 .sidebar{display:flex;flex-direction:column;gap:0.7rem;}
 .customer-card{text-align:center;padding:0.4rem 0;}
 .customer-avatar{width:44px;height:44px;border-radius:50%;background:var(–steel);border:2px solid var(–brass);margin:0 auto 0.45rem;display:flex;align-items:center;justify-content:center;font-size:1.4rem;}
@@ -78,6 +83,7 @@ header{background:linear-gradient(180deg,#0a0b0c,var(–dark));border-bottom:2px
 .next-customer-btn{width:100%;background:var(–steel);color:var(–silver);border:1px solid rgba(154,160,168,0.16);border-radius:4px;padding:0.32rem;font-family:‘Oswald’,sans-serif;font-size:0.68rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
 .next-customer-btn:hover{border-color:var(–silver);color:var(–light);}
 
+/* LOG */
 .log-entries{max-height:150px;overflow-y:auto;}
 .log-entries::-webkit-scrollbar{width:3px;}
 .log-entries::-webkit-scrollbar-thumb{background:var(–brass-dark);border-radius:2px;}
@@ -88,15 +94,18 @@ header{background:linear-gradient(180deg,#0a0b0c,var(–dark));border-bottom:2px
 .log-info{border-color:var(–silver);background:rgba(154,160,168,0.05);color:var(–silver);}
 .log-fail{border-color:var(–red);background:rgba(192,57,43,0.06);color:#e07070;}
 
+/* END DAY */
 .end-day-btn{width:100%;background:linear-gradient(135deg,#1a0a0a,#2a0f0f);border:1px solid var(–red);color:#e07070;font-family:‘Oswald’,sans-serif;font-size:0.82rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:0.55rem;border-radius:5px;cursor:pointer;transition:all 0.2s;}
 .end-day-btn:hover{background:linear-gradient(135deg,#2a0f0f,#3d1515);color:#ff9999;}
 
+/* NOTIFICATION */
 #notification{position:fixed;top:12px;right:12px;z-index:1000;padding:0.55rem 1rem;border-radius:5px;font-family:‘Oswald’,sans-serif;font-size:0.85rem;letter-spacing:1px;opacity:0;transform:translateX(28px);transition:all 0.25s;pointer-events:none;max-width:240px;}
 #notification.show{opacity:1;transform:translateX(0);}
 #notification.success{background:rgba(39,174,96,0.92);color:#fff;border-left:3px solid var(–green);}
 #notification.error{background:rgba(192,57,43,0.92);color:#fff;border-left:3px solid var(–red);}
 #notification.info{background:rgba(201,168,76,0.92);color:var(–darker);border-left:3px solid var(–brass-dark);}
 
+/* MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s;}
 .modal-overlay.show{opacity:1;pointer-events:all;}
 .modal{background:var(–panel);border:2px solid var(–brass);border-radius:8px;padding:1.4rem;max-width:340px;width:90%;text-align:center;}
@@ -133,36 +142,37 @@ header{background:linear-gradient(180deg,#0a0b0c,var(–dark));border-bottom:2px
         <div class="shop-tagline">Licensed Dealer · Est. 2010</div>
       </div>
     </div>
-    <div class="header-stats">
-      <div class="stat-box">
-        <div class="stat-label">Day</div>
-        <div class="stat-value" id="day-display">1</div>
+    <div class="header-right">
+      <span class="save-indicator" id="save-indicator">💾 SAVED</span>
+      <div class="header-stats">
+        <div class="stat-box">
+          <div class="stat-label">Day</div>
+          <div class="stat-value" id="day-display">1</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Cash</div>
+          <div class="stat-value" id="cash-display">$0.00</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Sales</div>
+          <div class="stat-value" id="sales-display">0</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Rep</div>
+          <div class="stat-value" id="rep-display">★★★☆☆</div>
+        </div>
       </div>
-      <div class="stat-box">
-        <div class="stat-label">Cash</div>
-        <div class="stat-value" id="cash-display">$0.00</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-label">Sales</div>
-        <div class="stat-value" id="sales-display">0</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-label">Rep</div>
-        <div class="stat-value" id="rep-display">★★★☆☆</div>
-      </div>
+      <button class="btn-reset" onclick="resetGame()">↺ RESET</button>
     </div>
   </div>
 </header>
 
 <div class="game-wrapper">
-
   <div class="ticker">
     <span class="ticker-inner">⬡ IRON RANGE ARMS ⬡ FEATURED: RUGER LCP MAX STAINLESS — CA COMPLIANT — $329.99 ⬡ ALL TRANSFERS REQUIRE DROS & BACKGROUND CHECK ⬡ SELL GUNS · EARN PROFIT · BUILD YOUR REPUTATION ⬡</span>
   </div>
 
-  <div class="broke-banner" id="broke-banner">
-    💡 Starting balance is $0.00 — sell guns to earn cash, then use profits to restock inventory!
-  </div>
+  <div class="info-banner" id="info-banner"></div>
 
   <div>
     <div class="panel">
@@ -201,6 +211,8 @@ header{background:linear-gradient(180deg,#0a0b0c,var(–dark));border-bottom:2px
 </div>
 
 <script>
+const SAVE_KEY = 'ironRangeArms_v1';
+
 const PRODUCTS = [{
   id:'ruger_lcp_max',
   name:'Ruger LCP Max 2.8" Barrel No Thumb Safety, Stainless, 10 Rnds',
@@ -219,23 +231,78 @@ const CUSTOMERS = [
   {name:'Officer Dave',avatar:'👮',interest:'Off-Duty Carry',budgetMin:300,budgetMax:500,moods:["Need a compact backup gun.","Stainless holds up better.","What's your best seller?"]},
 ];
 
-let state = {
-  cash:0, day:1, totalSales:0, totalRevenue:0,
-  dayRevenue:0, daySales:0, rep:3,
-  products:JSON.parse(JSON.stringify(PRODUCTS)), customer:null,
-};
+// ── SAVE / LOAD ──────────────────────────────────────────────
+function defaultState() {
+  return {
+    cash:0, day:1, totalSales:0, totalRevenue:0,
+    dayRevenue:0, daySales:0, rep:3,
+    products: JSON.parse(JSON.stringify(PRODUCTS)),
+    customer: null,
+    isNewGame: true,
+  };
+}
 
+function saveGame() {
+  try {
+    const payload = {...state, customer:null}; // customer is transient
+    localStorage.setItem(SAVE_KEY, JSON.stringify(payload));
+    flashSaveIndicator();
+  } catch(e) { console.warn('Save failed:', e); }
+}
+
+function loadGame() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return defaultState();
+    const saved = JSON.parse(raw);
+    // Merge saved product stocks onto master PRODUCTS template (safe for new items)
+    const products = PRODUCTS.map(tpl => {
+      const sp = (saved.products || []).find(p => p.id === tpl.id);
+      return sp ? {...tpl, stock: sp.stock} : {...tpl};
+    });
+    return {...defaultState(), ...saved, products, customer:null, isNewGame:false};
+  } catch(e) {
+    console.warn('Save corrupted, starting fresh:', e);
+    return defaultState();
+  }
+}
+
+let saveFlashTimer;
+function flashSaveIndicator() {
+  const el = document.getElementById('save-indicator');
+  el.classList.add('show');
+  clearTimeout(saveFlashTimer);
+  saveFlashTimer = setTimeout(() => el.classList.remove('show'), 1800);
+}
+
+// ── STATE ────────────────────────────────────────────────────
+let state = loadGame();
+
+// ── HELPERS ──────────────────────────────────────────────────
 const fmt = n => '$' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
 const getRepStars = () => { const s=Math.min(5,Math.max(1,Math.round(state.rep))); return '★'.repeat(s)+'☆'.repeat(5-s); };
 
+// ── HUD ──────────────────────────────────────────────────────
 function updateHUD() {
   document.getElementById('day-display').textContent = state.day;
   document.getElementById('cash-display').textContent = fmt(state.cash);
   document.getElementById('sales-display').textContent = state.totalSales;
   document.getElementById('rep-display').textContent = getRepStars();
-  document.getElementById('broke-banner').classList.toggle('show', state.cash === 0);
+
+  const banner = document.getElementById('info-banner');
+  if (state.cash === 0 && state.totalSales === 0) {
+    banner.className = 'info-banner broke show';
+    banner.textContent = '💡 Starting balance is $0.00 — sell guns to earn cash, then use profits to restock!';
+  } else if (state.cash === 0) {
+    banner.className = 'info-banner broke show';
+    banner.textContent = '⚠️ You\'re out of cash! Sell remaining stock to earn more before restocking.';
+  } else {
+    banner.className = 'info-banner';
+    banner.textContent = '';
+  }
 }
 
+// ── INVENTORY ────────────────────────────────────────────────
 function renderInventory() {
   const c = document.getElementById('inventory-list');
   c.innerHTML = '';
@@ -264,6 +331,7 @@ function renderInventory() {
   });
 }
 
+// ── CUSTOMER ─────────────────────────────────────────────────
 function pickCustomer() {
   const c = CUSTOMERS[Math.floor(Math.random()*CUSTOMERS.length)];
   const budget = c.budgetMin + Math.random()*(c.budgetMax-c.budgetMin);
@@ -284,38 +352,40 @@ function nextCustomer() {
   addLog(`${state.customer.avatar} ${state.customer.name} entered the shop.`,'info');
 }
 
+// ── ACTIONS ──────────────────────────────────────────────────
 function sellItem(id) {
   const p = state.products.find(x=>x.id===id), c = state.customer;
-  if (!p||p.stock<=0){showNotif('Out of stock!','error');return;}
-  if (c.budget<p.price){
+  if (!p||p.stock<=0) { showNotif('Out of stock!','error'); return; }
+  if (c.budget < p.price) {
     addLog(`${c.avatar} ${c.name} can't afford ${fmt(p.price)} (budget: ${fmt(c.budget)}).`,'fail');
     showNotif(`${c.name} can't afford it!`,'error'); return;
   }
-  const profit = p.price-p.cost;
+  const profit = p.price - p.cost;
   p.stock--; state.cash+=p.price; state.totalSales++; state.daySales++;
   state.totalRevenue+=p.price; state.dayRevenue+=p.price;
-  if(Math.random()>0.6) state.rep=Math.min(5,state.rep+0.3);
+  if (Math.random()>0.6) state.rep = Math.min(5, state.rep+0.3);
   addLog(`✅ SOLD to ${c.name} for ${fmt(p.price)} · profit +${fmt(profit)}`,'sale');
   showNotif(`SALE! +${fmt(p.price)}`,'success');
-  updateHUD(); renderInventory(); nextCustomer();
+  saveGame(); updateHUD(); renderInventory(); nextCustomer();
 }
 
 function restock(id) {
   const p = state.products.find(x=>x.id===id);
-  const qty = p.maxStock-p.stock;
-  if(qty<=0){showNotif('Already fully stocked!','error');return;}
-  const cost = p.restockCost*qty;
-  if(state.cash<cost){
+  const qty = p.maxStock - p.stock;
+  if (qty<=0) { showNotif('Already fully stocked!','error'); return; }
+  const cost = p.restockCost * qty;
+  if (state.cash < cost) {
     showNotif(`Need ${fmt(cost)} — you have ${fmt(state.cash)}`,'error');
     addLog(`❌ Can't restock — need ${fmt(cost)}, have ${fmt(state.cash)}`,'fail'); return;
   }
-  state.cash-=cost; p.stock=p.maxStock;
+  state.cash -= cost; p.stock = p.maxStock;
   addLog(`📦 Restocked ${qty} units for ${fmt(cost)}`,'restock');
   showNotif(`Restocked ${qty} units!`,'info');
-  updateHUD(); renderInventory();
+  saveGame(); updateHUD(); renderInventory();
 }
 
-function addLog(msg,type='info') {
+// ── LOG & NOTIF ──────────────────────────────────────────────
+function addLog(msg, type='info') {
   const log=document.getElementById('log'), el=document.createElement('div');
   el.className=`log-entry log-${type}`;
   const t=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
@@ -324,15 +394,16 @@ function addLog(msg,type='info') {
 }
 
 let notifTimer;
-function showNotif(msg,type='info') {
+function showNotif(msg, type='info') {
   const el=document.getElementById('notification');
   el.textContent=msg; el.className=`show ${type}`;
   clearTimeout(notifTimer);
   notifTimer=setTimeout(()=>{el.className='';},2500);
 }
 
+// ── DAY FLOW ─────────────────────────────────────────────────
 function endDay() {
-  const dayProfit=state.dayRevenue-(state.daySales*state.products[0].cost);
+  const dayProfit = state.dayRevenue-(state.daySales*state.products[0].cost);
   document.getElementById('modal-day-label').textContent=`DAY ${state.day} SUMMARY`;
   document.getElementById('modal-next-day').textContent=state.day+1;
   document.getElementById('modal-stats').innerHTML=`
@@ -349,13 +420,35 @@ function startNextDay() {
   state.day++; state.daySales=0; state.dayRevenue=0;
   document.getElementById('day-modal').classList.remove('show');
   addLog(`☀️ Day ${state.day} is open. Good luck!`,'info');
-  nextCustomer(); updateHUD();
+  saveGame(); nextCustomer(); updateHUD();
 }
 
-// INIT
+// ── RESET ────────────────────────────────────────────────────
+function resetGame() {
+  if (!confirm('Reset all progress and start over from Day 1 with $0?')) return;
+  localStorage.removeItem(SAVE_KEY);
+  state = defaultState();
+  document.getElementById('log').innerHTML='';
+  pickCustomer(); renderCustomer(); renderInventory(); updateHUD();
+  addLog('🔄 Game reset. Starting fresh!','info');
+  addLog('💡 Tip: Sell guns to earn cash, then restock with profits!','info');
+  addLog(`${state.customer.avatar} ${state.customer.name} entered the shop.`,'info');
+  showNotif('Game reset!','info');
+}
+
+// ── INIT ─────────────────────────────────────────────────────
+const isReturning = !state.isNewGame;
+state.isNewGame = false;
+
 pickCustomer(); renderCustomer(); renderInventory(); updateHUD();
-addLog('🏪 Iron Range Arms is open for business!','info');
-addLog('💡 Tip: Sell guns to earn cash, then restock with profits!','info');
+
+if (isReturning) {
+  addLog(`👋 Welcome back! Resuming Day ${state.day} with ${fmt(state.cash)} in cash.`,'restock');
+  showNotif(`Welcome back! Day ${state.day}`,'info');
+} else {
+  addLog('🏪 Iron Range Arms is open for business!','info');
+  addLog('💡 Tip: Sell guns to earn cash, then restock with profits!','info');
+}
 addLog(`${state.customer.avatar} ${state.customer.name} entered the shop.`,'info');
 </script>
 
