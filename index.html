@@ -1,596 +1,1794 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<title>VOID HUNTER</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>BLOOD RISING</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@700&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-html, body { width:100%; height:100%; background:#000; overflow:hidden; touch-action:none; }
-body { -webkit-user-select:none; user-select:none; }
-#c { display:block; position:fixed; top:0; left:0; }
-#ui {
-  position:fixed; top:0; left:0; right:0;
-  display:flex; justify-content:space-between; align-items:flex-start;
-  padding:12px 14px 8px; pointer-events:none; z-index:5;
-  background:linear-gradient(rgba(0,0,0,0.75),rgba(0,0,0,0));
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --blood:#8b0000;--crimson:#c0392b;--scarlet:#e74c3c;
+  --gold:#c9a84c;--dkgold:#8b6914;--bg:#06000a;--panel:#120010;
+  --border:#3a0020;--text:#e8d5b7;--muted:#7a5a5a;
+  --green:#27ae60;--purple:#7d3c98;--orange:#c0550a;
+  --blue:#1a5276;--teal:#0e6655;--silver:#bdc3c7;
 }
-.col { display:flex; flex-direction:column; gap:2px; }
-.lbl { font:9px monospace; color:#555; letter-spacing:2px; }
-.val { font:bold 20px monospace; color:#ddd; line-height:1; }
-#hpw { width:100px; height:5px; background:#1a1a1a; border-radius:3px; overflow:hidden; margin-top:1px; }
-#hpf { height:100%; background:linear-gradient(90deg,#e02020,#ff6040); border-radius:3px; }
-#xpw { width:100px; height:3px; background:#1a1a1a; border-radius:2px; overflow:hidden; margin-top:1px; }
-#xpf { height:100%; background:linear-gradient(90deg,#00aaff,#0033ff); border-radius:2px; }
-#ann {
-  position:fixed; top:35%; left:0; right:0; text-align:center;
-  font:bold 28px monospace; color:#ff2020; letter-spacing:5px;
-  pointer-events:none; z-index:6; opacity:0;
-  transition:opacity 0.4s; text-shadow:0 0 16px rgba(255,0,0,0.6);
-}
-#cmb {
-  position:fixed; top:46%; left:0; right:0; text-align:center;
-  font:bold 32px monospace; color:#ffcc00; letter-spacing:3px;
-  pointer-events:none; z-index:6; opacity:0;
-  transition:opacity 0.3s; text-shadow:0 0 16px rgba(255,180,0,0.6);
-}
-#bhp {
-  position:fixed; bottom:150px; left:50%; transform:translateX(-50%);
-  width:75%; max-width:320px; display:none; flex-direction:column;
-  align-items:center; gap:3px; z-index:5; pointer-events:none;
-}
-#bname { font:9px monospace; color:#cc44ff; letter-spacing:3px; }
-#bbar { width:100%; height:7px; background:#111; border-radius:3px; overflow:hidden; }
-#bfill { height:100%; background:linear-gradient(90deg,#8800cc,#dd44ff); }
-#upg {
-  position:fixed; top:0; left:0; right:0; bottom:0; z-index:20;
-  background:rgba(0,0,0,0.92); display:none;
-  flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:20px;
-}
-#upg h2 { font:bold 20px monospace; color:#00ccff; letter-spacing:4px; }
-#upg p  { font:10px monospace; color:#444; letter-spacing:2px; }
-#ucards { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; max-width:420px; }
-.uc {
-  flex:1; min-width:100px; max-width:140px;
-  border:1px solid #1a3a4a; background:#070f15;
-  padding:12px 8px; border-radius:4px;
-  display:flex; flex-direction:column; align-items:center; gap:6px;
-  cursor:pointer; text-align:center;
-}
-.uc:active { border-color:#00ccff; background:#0d1e2e; }
-.ui { font-size:22px; }
-.un { font:bold 10px monospace; color:#00ccff; letter-spacing:2px; }
-.ud { font:9px monospace; color:#445; line-height:1.4; }
-#scr {
-  position:fixed; top:0; left:0; right:0; bottom:0; z-index:10;
-  background:#000; display:flex; flex-direction:column;
-  align-items:center; justify-content:center; gap:12px; padding:24px;
-}
-#scr h1 {
-  font:bold 44px monospace; letter-spacing:8px; color:#ff1818;
-  text-shadow:0 0 28px rgba(255,0,0,0.5); text-align:center;
-}
-#scr p { font:11px monospace; color:#444; letter-spacing:2px; text-align:center; line-height:1.9; }
-#scr small { font:10px monospace; color:#222; letter-spacing:2px; text-align:center; }
-#go {
-  margin-top:6px; background:transparent; border:1px solid #e02020; color:#e02020;
-  font:bold 13px monospace; letter-spacing:3px; padding:13px 36px; cursor:pointer;
-  border-radius:2px; -webkit-appearance:none;
-}
-#go:active { background:rgba(224,32,32,0.1); }
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'IM Fell English',serif;overflow:hidden}
+button{font-family:'Cinzel',serif}
+
+/* ── SCREENS ── */
+.scr{display:none;position:fixed;inset:0;overflow-y:auto}
+.scr.show{display:block}
+#s-intro.show,#s-death.show{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.2rem;min-height:100%}
+#s-game.show{display:flex;flex-direction:column;height:100%}
+
+/* ── INTRO ── */
+#s-intro{background:radial-gradient(ellipse at 50% 20%,rgba(139,0,0,.18),transparent 65%),var(–bg)}
+.gtitle{font-family:‘Cinzel Decorative’,cursive;font-size:clamp(1.8rem,7vw,2.6rem);background:linear-gradient(150deg,#e74c3c 0%,#c9a84c 50%,#8b0000 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-align:center;line-height:1.05;filter:drop-shadow(0 0 18px rgba(192,57,43,.5))}
+.gsub{font-size:.5rem;letter-spacing:.45em;color:var(–muted);text-align:center;margin:.3rem 0 1.2rem;text-transform:uppercase;font-family:‘Cinzel’,serif}
+.cform{background:rgba(18,0,16,.96);border:1px solid var(–border);border-radius:8px;padding:1rem;width:100%;max-width:360px;box-shadow:0 0 50px rgba(139,0,0,.15)}
+.flabel{font-size:.5rem;letter-spacing:.2em;color:var(–muted);text-transform:uppercase;margin-bottom:.28rem;display:block;font-family:‘Cinzel’,serif}
+input[type=text]{width:100%;background:rgba(0,0,0,.6);border:1px solid var(–border);border-radius:4px;color:var(–text);font-family:‘IM Fell English’,serif;font-size:.95rem;padding:.5rem .75rem;margin-bottom:.9rem;outline:none;-webkit-appearance:none}
+input:focus{border-color:var(–crimson);box-shadow:0 0 8px rgba(192,57,43,.2)}
+.ogrid{display:grid;grid-template-columns:1fr 1fr;gap:.45rem;margin-bottom:1rem}
+.obtn{background:rgba(0,0,0,.45);border:1px solid var(–border);border-radius:5px;color:var(–muted);font-family:‘Cinzel’,serif;font-size:.5rem;text-transform:uppercase;padding:.6rem .25rem;cursor:pointer;text-align:center;width:100%;line-height:1.5}
+.obtn small{font-size:.44rem;color:#554;letter-spacing:0;display:block;margin-top:.15rem}
+.obtn.sel{background:rgba(139,0,0,.28);border-color:var(–crimson);color:var(–text)}
+.btnp{width:100%;background:linear-gradient(135deg,#6a0000,#3a0000);border:1px solid var(–crimson);border-radius:5px;color:var(–gold);font-family:‘Cinzel’,serif;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;padding:.7rem;cursor:pointer;margin-top:.2rem}
+.btnp:active{background:linear-gradient(135deg,var(–crimson),#6a0000)}
+
+/* ── TOP BAR ── */
+.topbar{background:rgba(4,0,8,.99);border-bottom:1px solid var(–border);padding:.38rem .65rem;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.vname{font-family:‘Cinzel Decorative’,cursive;font-size:.78rem;color:var(–gold);max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.topstats{display:flex;gap:.4rem;font-size:.42rem;letter-spacing:.06em;color:var(–muted);font-family:‘Cinzel’,serif;flex-wrap:wrap}
+.topstats b{color:var(–scarlet);font-size:.7rem}
+
+/* ── TABS ── */
+.tabs{display:flex;background:rgba(4,0,8,.99);border-bottom:1px solid var(–border);flex-shrink:0;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;padding:.38rem .5rem;font-size:.42rem;letter-spacing:.07em;text-transform:uppercase;text-align:center;color:var(–muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;font-family:‘Cinzel’,serif}
+.tab.on{color:var(–gold);border-color:var(–crimson)}
+
+/* ── PANES ── */
+.pane{display:none;padding:.6rem;overflow-y:auto;flex:1;padding-bottom:4rem}
+.pane.on{display:block}
+
+/* ── CARDS ── */
+.card{background:var(–panel);border:1px solid var(–border);border-radius:6px;padding:.65rem;margin-bottom:.55rem}
+.ptitle{font-size:.44rem;letter-spacing:.25em;color:var(–gold);text-transform:uppercase;margin-bottom:.5rem;padding-bottom:.3rem;border-bottom:1px solid rgba(58,0,32,.6);font-family:‘Cinzel’,serif}
+
+/* ── TIER BADGE ── */
+.tbadge{text-align:center;padding:.5rem;background:rgba(0,0,0,.4);border:1px solid var(–border);border-radius:5px;margin-bottom:.55rem}
+.tname{font-family:‘Cinzel Decorative’,cursive;font-size:.88rem;color:var(–scarlet)}
+.tnight{font-size:.44rem;letter-spacing:.16em;color:var(–muted);margin-top:.18rem;text-transform:uppercase;font-family:‘Cinzel’,serif}
+
+/* ── BARS ── */
+.srow{margin-bottom:.42rem}
+.slbl{display:flex;justify-content:space-between;font-size:.44rem;letter-spacing:.08em;color:var(–muted);text-transform:uppercase;margin-bottom:.14rem;font-family:‘Cinzel’,serif}
+.sval{color:var(–text)}
+.track{height:5px;background:rgba(0,0,0,.6);border-radius:3px;overflow:hidden;border:1px solid rgba(58,0,32,.4)}
+.fill{height:100%;border-radius:3px;transition:width .32s ease}
+.f-hp{background:linear-gradient(to right,#004400,var(–green))}
+.f-bl{background:linear-gradient(to right,var(–blood),var(–scarlet))}
+.f-hu{background:linear-gradient(to right,#3d1500,var(–orange))}
+.f-xp{background:linear-gradient(to right,#2d006a,var(–purple))}
+.f-san{background:linear-gradient(to right,#001444,#2e86c1)}
+.f-rep{background:linear-gradient(to right,#3d2800,var(–gold))}
+
+/* ── GRIDS ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:.28rem;font-size:.65rem}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.26rem;font-size:.58rem}
+.cell{background:rgba(0,0,0,.35);border:1px solid rgba(58,0,32,.4);border-radius:4px;padding:.26rem .42rem;display:flex;justify-content:space-between;align-items:center}
+.cell b{color:var(–scarlet)}
+.cell.gd b{color:var(–gold)}
+.cell.bl b{color:#5dade2}
+.cell.gr b{color:var(–green)}
+.cell.pr b{color:#c39bd3}
+
+/* ── POWERS ── */
+.pwrlist{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:.22rem}
+.pwrlist li{font-size:.5rem;color:var(–muted);background:rgba(0,0,0,.3);border:1px solid rgba(58,0,32,.3);border-radius:3px;padding:.22rem .35rem;display:flex;align-items:center;gap:.25rem;font-family:‘Cinzel’,serif}
+.pwrlist li.on{color:var(–text);border-color:rgba(139,0,0,.6)}
+.dot{width:5px;height:5px;border-radius:50%;background:var(–border);flex-shrink:0}
+.dot.on{background:var(–scarlet);box-shadow:0 0 5px var(–scarlet)}
+
+/* ── SECTION LABELS ── */
+.slb{font-size:.42rem;letter-spacing:.18em;color:var(–gold);text-transform:uppercase;padding:.24rem .44rem;background:rgba(0,0,0,.35);border-radius:3px;border-left:2px solid var(–crimson);margin-bottom:.35rem;margin-top:.05rem;font-family:‘Cinzel’,serif}
+
+/* ── ACTION BUTTONS ── */
+.ag{display:grid;grid-template-columns:1fr 1fr;gap:.32rem;margin-bottom:.55rem}
+.ag3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.28rem;margin-bottom:.5rem}
+.ab{background:rgba(8,0,12,.88);border:1px solid var(–border);border-radius:5px;color:var(–text);font-family:‘Cinzel’,serif;font-size:.44rem;letter-spacing:.03em;text-transform:uppercase;padding:.48rem .2rem;cursor:pointer;text-align:center;width:100%;-webkit-appearance:none;line-height:1.35}
+.ab:active{opacity:.72;transform:scale(.97)}
+.ab .ac{font-size:.38rem;color:var(–muted);display:block;margin-top:.1rem;line-height:1.3}
+.ab.d{border-color:rgba(139,0,0,.5)}.ab.d:active{background:rgba(100,0,0,.2)}
+.ab.s{border-color:rgba(0,100,0,.4)}.ab.s:active{background:rgba(0,70,0,.15)}
+.ab.c{border-color:rgba(80,0,110,.5)}.ab.c:active{background:rgba(80,0,110,.2)}
+.ab.g{border-color:rgba(160,120,0,.45)}.ab.g:active{background:rgba(100,75,0,.2)}
+.ab.b{border-color:rgba(20,80,140,.45)}.ab.b:active{background:rgba(15,60,110,.2)}
+.ab.t{border-color:rgba(0,90,70,.45)}.ab.t:active{background:rgba(0,65,50,.2)}
+.ab.dis{opacity:.32;pointer-events:none}
+
+/* ── NIGHT BTN ── */
+.nbtn{width:100%;background:linear-gradient(135deg,rgba(120,0,0,.35),rgba(40,0,0,.55));border:1px solid var(–crimson);border-radius:6px;color:var(–gold);font-family:‘Cinzel Decorative’,cursive;font-size:.72rem;letter-spacing:.1em;padding:.62rem;cursor:pointer;margin-top:.4rem}
+.nbtn:active{background:rgba(139,0,0,.45)}
+
+/* ── LOG ── */
+#logbox{height:250px;overflow-y:auto;background:rgba(0,0,0,.45);border:1px solid var(–border);border-radius:5px;padding:.5rem;font-size:.62rem;line-height:1.7;scrollbar-width:thin;scrollbar-color:var(–blood) transparent;font-family:‘IM Fell English’,serif}
+.le{padding-left:.35rem;border-left:2px solid transparent;margin-bottom:.18rem}
+.le.good{border-color:var(–crimson)}
+.le.bad{border-color:var(–orange);color:#c07030}
+.le.info{border-color:var(–purple);color:#b080d0}
+.le.night{border-color:var(–gold);color:var(–gold);font-style:italic}
+.le.crit{border-color:var(–scarlet);color:var(–scarlet);font-weight:bold}
+.le.event{border-color:#2e86c1;color:#7fb3d3}
+.le.quest{border-color:var(–teal);color:#76d7c4}
+
+/* ── COVEN ── */
+.cmem{display:flex;justify-content:space-between;align-items:center;padding:.35rem 0;border-bottom:1px solid rgba(58,0,32,.3)}
+.cmn{font-size:.68rem}
+.cmi{font-size:.44rem;color:var(–muted)}
+.cmp{color:var(–purple);font-size:.6rem;font-weight:700;text-align:right;line-height:1.5}
+.empty{color:var(–muted);font-style:italic;font-size:.68rem;text-align:center;padding:.7rem 0}
+
+/* ── QUESTS ── */
+.qcard{background:rgba(0,30,20,.4);border:1px solid rgba(0,90,70,.4);border-radius:5px;padding:.55rem;margin-bottom:.4rem}
+.qtitle{font-size:.58rem;color:#76d7c4;font-family:‘Cinzel’,serif;margin-bottom:.2rem}
+.qdesc{font-size:.52rem;color:var(–muted);margin-bottom:.3rem;font-style:italic}
+.qprog{font-size:.48rem;color:var(–gold);font-family:‘Cinzel’,serif}
+.qtrack{height:4px;background:rgba(0,0,0,.4);border-radius:2px;overflow:hidden;margin-top:.2rem}
+.qfill{height:100%;background:linear-gradient(to right,#0e6655,#76d7c4);border-radius:2px;transition:width .3s}
+
+/* ── SHOP ── */
+.shopitem{background:rgba(20,10,0,.5);border:1px solid rgba(140,100,0,.3);border-radius:5px;padding:.5rem;margin-bottom:.38rem;display:flex;justify-content:space-between;align-items:center}
+.siname{font-size:.6rem;color:var(–gold);font-family:‘Cinzel’,serif}
+.sidesc{font-size:.46rem;color:var(–muted);margin-top:.1rem}
+.siprice{font-size:.58rem;color:var(–scarlet);font-family:‘Cinzel’,serif;font-weight:700;white-space:nowrap;margin-left:.5rem}
+.sibuy{background:linear-gradient(135deg,#3a2000,#1a0c00);border:1px solid var(–gold);border-radius:3px;color:var(–gold);font-family:‘Cinzel’,serif;font-size:.44rem;padding:.3rem .55rem;cursor:pointer;flex-shrink:0;margin-left:.4rem}
+.sibuy:active{background:rgba(100,70,0,.3)}
+
+/* ── WORLD ── */
+.wevent{font-size:.56rem;color:#7fb3d3;line-height:1.7;padding:.25rem .4rem;border-left:2px solid #2e86c1;margin-bottom:.28rem;font-style:italic}
+
+/* ── DEATH ── */
+#s-death{background:radial-gradient(ellipse at 50% 30%,rgba(139,0,0,.2),var(–bg) 65%);text-align:center}
+.dtitle{font-family:‘Cinzel Decorative’,cursive;font-size:2.3rem;color:var(–blood);margin-bottom:.6rem;animation:flk 2.5s infinite}
+@keyframes flk{0%,100%{opacity:1}93%{opacity:1}94%{opacity:.5}96%{opacity:1}98%{opacity:.3}99%{opacity:1}}
+.dstats{font-size:.54rem;letter-spacing:.12em;color:var(–muted);text-transform:uppercase;line-height:2.3;margin:1rem 0 1.4rem;font-family:‘Cinzel’,serif}
+
+/* ── TOAST ── */
+#tc{position:fixed;top:.55rem;right:.55rem;z-index:999;display:flex;flex-direction:column;gap:.26rem;pointer-events:none}
+.toast{background:rgba(10,0,14,.97);border:1px solid var(–border);border-radius:4px;padding:.38rem .75rem;font-family:‘Cinzel’,serif;font-size:.54rem;letter-spacing:.08em;animation:tin .22s ease,tout .3s 2.3s ease both;max-width:180px}
+.toast.good{border-color:var(–crimson);color:var(–scarlet)}
+.toast.crit{border-color:var(–gold);color:var(–gold)}
+.toast.bad{border-color:var(–orange);color:var(–orange)}
+.toast.info{border-color:var(–purple);color:#c090e8}
+.toast.quest{border-color:var(–teal);color:#76d7c4}
+@keyframes tin{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:none}}
+@keyframes tout{to{opacity:0;transform:translateX(10px)}}
+
+.nflash{position:fixed;inset:0;background:rgba(0,0,0,.84);z-index:900;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:‘Cinzel Decorative’,cursive;font-size:1.5rem;color:var(–crimson);animation:nf 1.1s ease both;pointer-events:none;gap:.4rem}
+.nflash small{font-size:.65rem;color:var(–muted);letter-spacing:.2em}
+@keyframes nf{0%{opacity:0}20%{opacity:1}80%{opacity:1}100%{opacity:0}}
+
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:var(–blood);border-radius:2px}
 </style>
+
 </head>
 <body>
-<canvas id="c"></canvas>
+<div id="tc"></div>
 
-<div id="ui">
-  <div class="col">
-    <div class="lbl">VOID HUNTER</div>
-    <div id="hpw"><div id="hpf" style="width:100%"></div></div>
-    <div id="xpw"><div id="xpf" style="width:0%"></div></div>
-  </div>
-  <div class="col" style="align-items:center">
-    <div class="lbl">SCORE</div>
-    <div class="val" id="sv">0</div>
-  </div>
-  <div class="col" style="align-items:flex-end">
-    <div class="lbl">WAVE</div>
-    <div class="val" id="wv">1</div>
-    <div class="lbl" id="wpv">CANNON</div>
+<!-- ═══ INTRO ═══ -->
+
+<div id="s-intro" class="scr">
+  <div class="gtitle">BLOOD<br>RISING</div>
+  <div class="gsub">Vampire Chronicle</div>
+  <div class="cform">
+    <div style="font-size:.46rem;letter-spacing:.28em;color:var(--gold);text-align:center;margin-bottom:.8rem;text-transform:uppercase;font-family:'Cinzel',serif">Awaken Your Vampire</div>
+    <label class="flabel">Your Name</label>
+    <input type="text" id="vn" placeholder="Enter your name..." maxlength="22">
+    <label class="flabel">Choose Your Origin</label>
+    <div class="ogrid">
+      <button class="obtn sel" data-o="noble"   onclick="pO(this)">Noble Lineage<small>+CHA +STR, 30 gold start</small></button>
+      <button class="obtn"     data-o="plague"  onclick="pO(this)">Plague Doctor<small>+AGI +WIS, resist dmg</small></button>
+      <button class="obtn"     data-o="warrior" onclick="pO(this)">Fallen Warrior<small>+STR +STR, 130 max HP</small></button>
+      <button class="obtn"     data-o="witch"   onclick="pO(this)">Dark Witch<small>+WIS +CHA, 120 max blood</small></button>
+    </div>
+    <button class="btnp" onclick="startGame()">Rise from the Grave</button>
   </div>
 </div>
 
-<div id="ann"></div>
-<div id="cmb"></div>
+<!-- ═══ GAME ═══ -->
 
-<div id="bhp">
-  <div id="bname">VOID TITAN</div>
-  <div id="bbar"><div id="bfill" style="width:100%"></div></div>
+<div id="s-game" class="scr">
+  <div class="topbar">
+    <div class="vname" id="ui-name">—</div>
+    <div class="topstats">
+      <div>Night <b id="ui-night">1</b></div>
+      <div>Blood <b id="ui-blood">0</b></div>
+      <div>Kills <b id="ui-kills">0</b></div>
+      <div>Coven <b id="ui-coven">0</b></div>
+      <div>Gold <b id="ui-gold-top">0</b></div>
+    </div>
+  </div>
+  <div class="tabs">
+    <div class="tab on" onclick="tab('status',this)">Status</div>
+    <div class="tab"    onclick="tab('hunt',this)">Hunt</div>
+    <div class="tab"    onclick="tab('dark',this)">Dark Arts</div>
+    <div class="tab"    onclick="tab('coven',this)">Coven</div>
+    <div class="tab"    onclick="tab('world',this)">World</div>
+    <div class="tab"    onclick="tab('map',this)">Map</div>
+    <div class="tab"    onclick="tab('dungeon',this)">Dungeon</div>
+    <div class="tab"    onclick="tab('quests',this)">Quests</div>
+    <div class="tab"    onclick="tab('shop',this)">Shop</div>
+    <div class="tab"    onclick="tab('log',this)">Log</div>
+  </div>
+
+  <!-- STATUS -->
+
+  <div class="pane on" id="pane-status">
+    <div class="tbadge">
+      <div class="tname" id="ui-tier">Newborn</div>
+      <div class="tnight" id="ui-tiernight">Night 1 of Eternity</div>
+    </div>
+    <div class="card">
+      <div class="ptitle">Vital Signs</div>
+      <div class="srow"><div class="slbl"><span>Health</span><span class="sval" id="ui-hp">100/100</span></div><div class="track"><div class="fill f-hp" id="bar-hp" style="width:100%"></div></div></div>
+      <div class="srow"><div class="slbl"><span>Blood</span><span class="sval" id="ui-bl">50/100</span></div><div class="track"><div class="fill f-bl" id="bar-bl" style="width:50%"></div></div></div>
+      <div class="srow"><div class="slbl"><span>Hunger</span><span class="sval" id="ui-hu">0/100</span></div><div class="track"><div class="fill f-hu" id="bar-hu" style="width:0%"></div></div></div>
+      <div class="srow"><div class="slbl"><span>Sanity</span><span class="sval" id="ui-san">100/100</span></div><div class="track"><div class="fill f-san" id="bar-san" style="width:100%"></div></div></div>
+      <div class="srow"><div class="slbl"><span>Reputation</span><span class="sval" id="ui-rep">0/100</span></div><div class="track"><div class="fill f-rep" id="bar-rep" style="width:0%"></div></div></div>
+      <div class="srow"><div class="slbl"><span>XP</span><span class="sval" id="ui-xp">0/100</span></div><div class="track"><div class="fill f-xp" id="bar-xp" style="width:0%"></div></div></div>
+    </div>
+    <div class="card">
+      <div class="ptitle">Attributes</div>
+      <div class="g2">
+        <div class="cell">STR <b id="ui-str">5</b></div>
+        <div class="cell">AGI <b id="ui-agi">5</b></div>
+        <div class="cell">WIS <b id="ui-wis">5</b></div>
+        <div class="cell">CHA <b id="ui-cha">5</b></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ptitle">Resources</div>
+      <div class="g3">
+        <div class="cell gd">Gold <b id="ui-gold">10</b></div>
+        <div class="cell gd">Kills <b id="ui-kills2">0</b></div>
+        <div class="cell gd">Drained <b id="ui-drained">0</b></div>
+        <div class="cell bl">Infamy <b id="ui-infamy">0</b></div>
+        <div class="cell bl">Artifacts <b id="ui-artifacts">0</b></div>
+        <div class="cell pr">Trophies <b id="ui-trophies">0</b></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ptitle">Active Effects</div>
+      <div id="ui-effects" style="font-size:.56rem;color:var(--muted);font-style:italic;font-family:'IM Fell English',serif">None active</div>
+    </div>
+    <div class="card">
+      <div class="ptitle">Vampire Powers</div>
+      <ul class="pwrlist" id="ui-powers"></ul>
+    </div>
+    <div class="card">
+      <div class="ptitle">Equipment</div>
+      <div id="ui-equip" style="font-size:.55rem;color:var(--muted);font-style:italic;font-family:'IM Fell English',serif">No equipment</div>
+    </div>
+  </div>
+
+  <!-- HUNT -->
+
+  <div class="pane" id="pane-hunt">
+    <div class="slb">Feed</div>
+    <div class="ag">
+      <button class="ab s" onclick="a('stray')">Stray Animal<span class="ac">Safe, small blood</span></button>
+      <button class="ab"   onclick="a('human')">Mesmerize Human<span class="ac">Med risk, good blood</span></button>
+      <button class="ab"   onclick="a('ambush')">Ambush Traveller<span class="ac">Surprise, mid blood</span></button>
+      <button class="ab d" onclick="a('drain')">Full Drain<span class="ac">Kill target, max blood</span></button>
+      <button class="ab s" onclick="a('market')">Blood Market<span class="ac">Buy blood for 20 gold</span></button>
+      <button class="ab"   onclick="a('noble_feed')">Feed on Noble<span class="ac">Risky, huge blood+gold</span></button>
+      <button class="ab s" onclick="a('forest')">Hunt Forest<span class="ac">Wildlife, safe, calming</span></button>
+      <button class="ab b" onclick="a('lure_victim')">Lure with Music<span class="ac">CHA roll, no risk</span></button>
+    </div>
+    <div class="slb">Combat</div>
+    <div class="ag">
+      <button class="ab d" onclick="a('hunter')">Hunt a Hunter<span class="ac">Dangerous, big XP</span></button>
+      <button class="ab d" onclick="a('vampire')">Slay Rival Vampire<span class="ac">Very risky, massive XP</span></button>
+      <button class="ab"   onclick="a('raid')">Raid Village<span class="ac">Med risk, loot+blood</span></button>
+      <button class="ab d" onclick="a('manor')">Sack Manor<span class="ac">High risk, huge gold</span></button>
+      <button class="ab"   onclick="a('patrol')">Ambush Patrol<span class="ac">Med, reduce infamy</span></button>
+      <button class="ab d" onclick="a('werewolf')">Fight Werewolf<span class="ac">Brutal fight, trophy</span></button>
+      <button class="ab s" onclick="a('defend')">Defend Territory<span class="ac">Repel invaders</span></button>
+      <button class="ab"   onclick="a('bounty')">Claim Bounty<span class="ac">Take a contract kill</span></button>
+    </div>
+    <div class="slb">Recover</div>
+    <div class="ag">
+      <button class="ab s" onclick="a('rest')">Rest in Coffin<span class="ac">Restore HP</span></button>
+      <button class="ab s" onclick="a('meditate')">Dark Meditation<span class="ac">Hunger down, +WIS</span></button>
+      <button class="ab s" onclick="a('hide')">Lie Low<span class="ac">Reduce infamy</span></button>
+      <button class="ab s" onclick="a('gorge')">Gorge on Reserve<span class="ac">Spend blood, heal HP</span></button>
+    </div>
+    <button class="nbtn" onclick="nxt()">Pass Into the Next Night</button>
+  </div>
+
+  <!-- DARK ARTS -->
+
+  <div class="pane" id="pane-dark">
+    <div class="slb">Occult Research</div>
+    <div class="ag">
+      <button class="ab g" onclick="a('tome')">Study Dark Tome<span class="ac">30 gold, +WIS + bonus</span></button>
+      <button class="ab g" onclick="a('ritual')">Blood Ritual<span class="ac">50 blood, huge XP</span></button>
+      <button class="ab g" onclick="a('artifact_seek')">Seek Artifact<span class="ac">Explore, risky</span></button>
+      <button class="ab g" onclick="a('artifact_use')">Use Artifact<span class="ac">Spend for big bonus</span></button>
+      <button class="ab g" onclick="a('sacrifice_self')">Self Blood Offering<span class="ac">Lose HP, huge XP</span></button>
+      <button class="ab g" onclick="a('commune')">Commune with Dead<span class="ac">Gain dark insight</span></button>
+    </div>
+    <div class="slb">Blood Sorcery</div>
+    <div class="ag">
+      <button class="ab b" onclick="a('ward')">Blood Ward<span class="ac">20 blood, barrier</span></button>
+      <button class="ab b" onclick="a('scry')">Blood Scry<span class="ac">15 blood, reveal events</span></button>
+      <button class="ab b" onclick="a('curse')">Curse Enemy<span class="ac">25 blood, weaken hunters</span></button>
+      <button class="ab b" onclick="a('siphon')">Soul Siphon<span class="ac">Drain life, temp +STR</span></button>
+      <button class="ab b" onclick="a('bloodform')">Bloodform Shift<span class="ac">Transform briefly, +AGI</span></button>
+      <button class="ab b" onclick="a('plague_mist')">Plague Mist<span class="ac">Infect area, +infamy, XP</span></button>
+    </div>
+    <div class="slb">Manipulation</div>
+    <div class="ag">
+      <button class="ab"   onclick="a('corrupt')">Corrupt Guard<span class="ac">40 gold, -infamy</span></button>
+      <button class="ab"   onclick="a('fear')">Spread Fear<span class="ac">+infamy, +XP, terrorize</span></button>
+      <button class="ab"   onclick="a('blackmail')">Blackmail Noble<span class="ac">CHA roll, recurring gold</span></button>
+      <button class="ab"   onclick="a('forge')">Forge Identity<span class="ac">-infamy, move freely</span></button>
+      <button class="ab"   onclick="a('puppet')">Create Puppet<span class="ac">Dominate human spy</span></button>
+      <button class="ab d" onclick="a('mass_fear')">Mass Terror Event<span class="ac">Huge infamy+XP, risky</span></button>
+    </div>
+    <button class="nbtn" onclick="nxt()">Pass Into the Next Night</button>
+  </div>
+
+  <!-- COVEN -->
+
+  <div class="pane" id="pane-coven">
+    <div class="slb">Recruitment</div>
+    <div class="ag">
+      <button class="ab c" onclick="a('turn')">Turn Human<span class="ac">30 blood, basic thrall</span></button>
+      <button class="ab c" onclick="a('turn_noble')">Turn Noble<span class="ac">50 blood, elite thrall</span></button>
+      <button class="ab c" onclick="a('lure_cult')">Lure Cultist<span class="ac">10 gold, willing member</span></button>
+      <button class="ab c" onclick="a('headhunt')">Headhunt Rogue Vamp<span class="ac">Recruit stray vampire</span></button>
+    </div>
+    <div class="slb">Management</div>
+    <div class="ag">
+      <button class="ab c" onclick="a('hunt_coven')">Send to Hunt<span class="ac">Loot, risk of death</span></button>
+      <button class="ab c" onclick="a('spy_coven')">Send as Spy<span class="ac">Intel, gold, can be caught</span></button>
+      <button class="ab c" onclick="a('train_coven')">Train Thralls<span class="ac">20 blood, +power all</span></button>
+      <button class="ab c" onclick="a('bond_coven')">Blood Bond Ritual<span class="ac">+XP +CHA per member</span></button>
+      <button class="ab c" onclick="a('promote')">Promote Thrall<span class="ac">Best becomes lieutenant</span></button>
+      <button class="ab c" onclick="a('assign_lair')">Assign to Lair<span class="ac">Thrall guards your base</span></button>
+      <button class="ab c" onclick="a('blood_bind')">Blood Bind Thrall<span class="ac">20 blood, permanent bond</span></button>
+      <button class="ab d" onclick="a('sacrifice')">Sacrifice Thrall<span class="ac">Kill weakest for blood</span></button>
+    </div>
+    <div class="card">
+      <div class="ptitle">Your Coven (<span id="ui-covcnt">0</span>) — Lair Guard: <span id="ui-guard">None</span></div>
+      <ul id="ui-covlist"><li class="empty">No thralls — turn humans to build your coven</li></ul>
+    </div>
+    <button class="nbtn" onclick="nxt()">Pass Into the Next Night</button>
+  </div>
+
+  <!-- WORLD -->
+
+  <div class="pane" id="pane-world">
+    <div class="card">
+      <div class="ptitle">World State</div>
+      <div class="g2">
+        <div class="cell bl">Infamy <b id="w-inf">0</b></div>
+        <div class="cell bl">Hunter Threat <b id="w-thr">Low</b></div>
+        <div class="cell gd">Region Wealth <b id="w-wlth">Normal</b></div>
+        <div class="cell gd">Church Heat <b id="w-chu">Low</b></div>
+        <div class="cell gr">Lair Level <b id="w-lair">1</b></div>
+        <div class="cell pr">Reputation <b id="w-rep">0</b></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ptitle">Recent Events</div>
+      <div id="ui-wevents">—</div>
+    </div>
+    <div class="slb">Influence</div>
+    <div class="ag">
+      <button class="ab b" onclick="a('bribe')">Bribe Town Council<span class="ac">60 gold, -all heat</span></button>
+      <button class="ab b" onclick="a('lair')">Upgrade Lair<span class="ac">Cost scales, +max HP</span></button>
+      <button class="ab b" onclick="a('tavern')">Control Tavern<span class="ac">40 gold, passive income</span></button>
+      <button class="ab b" onclick="a('church_deal')">Deal with Church<span class="ac">Risky truce, big -infamy</span></button>
+      <button class="ab d" onclick="a('rival_coven')">Eliminate Rival Coven<span class="ac">Very dangerous</span></button>
+      <button class="ab b" onclick="a('spy_network')">Build Spy Network<span class="ac">50 gold, passive intel</span></button>
+    </div>
+    <div class="slb">Exploration</div>
+    <div class="ag">
+      <button class="ab t" onclick="a('ruins')">Explore Ruins<span class="ac">Artifacts, spirits</span></button>
+      <button class="ab t" onclick="a('witch')">Visit Witch Hermit<span class="ac">Gold for dark gifts</span></button>
+      <button class="ab t" onclick="a('cemetery')">Desecrate Cemetery<span class="ac">Harvest shadow energy</span></button>
+      <button class="ab t" onclick="a('court')">Vampire Court<span class="ac">Political XP, dangerous</span></button>
+      <button class="ab t" onclick="a('catacomb')">Delve Catacombs<span class="ac">Deep risk, deep reward</span></button>
+      <button class="ab t" onclick="a('harbor')">Harbor Smugglers<span class="ac">Trade blood internationally</span></button>
+    </div>
+    <button class="nbtn" onclick="nxt()">Pass Into the Next Night</button>
+  </div>
+
+  <!-- QUESTS -->
+
+  <div class="pane" id="pane-quests">
+    <div class="card" style="margin-bottom:.5rem">
+      <div class="ptitle">Active Quests</div>
+      <div id="ui-quests-active"></div>
+    </div>
+    <div class="card">
+      <div class="ptitle">Completed Quests</div>
+      <div id="ui-quests-done" style="font-size:.55rem;color:var(--muted);font-style:italic">None yet</div>
+    </div>
+    <div class="card">
+      <div class="ptitle">Achievements</div>
+      <div id="ui-achieve" style="font-size:.55rem;line-height:1.9"></div>
+    </div>
+  </div>
+
+  <!-- SHOP -->
+
+  <div class="pane" id="pane-shop">
+    <div class="card">
+      <div class="ptitle">Black Market — Your Gold: <span id="shop-gold" style="color:var(--gold)">0</span></div>
+      <div id="shop-items"></div>
+    </div>
+    <div class="card">
+      <div class="ptitle">Sell Trophies — Trophies: <span id="shop-trophies" style="color:#c39bd3">0</span></div>
+      <div class="ag3">
+        <button class="ab g" onclick="a('sell_trophy')">Sell Trophy<span class="ac">Convert to 20 gold each</span></button>
+        <button class="ab g" onclick="a('sell_blood_vial')">Sell Blood Vials<span class="ac">Sell excess blood 5g each</span></button>
+        <button class="ab g" onclick="a('sell_artifacts')">Sell Artifact<span class="ac">50 gold per artifact</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOG -->
+
+  <!-- MAP PANE -->
+
+  <div class="pane" id="pane-map">
+    <div class="card" style="padding:.6rem">
+      <div class="ptitle">Realm of Darkness — Your Domain</div>
+      <canvas id="mapCanvas" style="width:100%;height:auto;display:block;border:1px solid var(--border);border-radius:4px;cursor:pointer" onclick="mapClick(event)"></canvas>
+    </div>
+    <div class="card">
+      <div class="ptitle">Location Intel</div>
+      <div id="map-info" style="font-size:.62rem;color:var(--muted);line-height:1.8">Select a location on the map to view details.</div>
+    </div>
+    <div class="card">
+      <div class="ptitle">Territory Control</div>
+      <div id="map-control" style="font-size:.62rem;line-height:1.8;color:var(--muted)">Loading...</div>
+    </div>
+    <button class="nbtn" onclick="nxt()">Pass Into the Next Night</button>
+  </div>
+
+  <!-- DUNGEON PANE -->
+
+  <div class="pane" id="pane-dungeon">
+    <div class="card">
+      <div class="ptitle">Dungeon Delve</div>
+      <div id="dungeon-status" style="font-size:.62rem;color:var(--muted);line-height:1.8">Choose a dungeon to delve. Each dungeon has multiple floors of escalating danger and reward. You may retreat at any time — or be forced out.</div>
+    </div>
+    <div id="dungeon-active" style="display:none">
+      <div class="card" style="border-color:var(--crimson)">
+        <div class="ptitle">Active Delve: <span id="dg-name">—</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:.6rem;margin-bottom:.5rem">
+          <span>Floor <b id="dg-floor" style="color:var(--gold)">1</b></span>
+          <span>HP <b id="dg-hp" style="color:var(--green)">—</b></span>
+          <span>Blood <b id="dg-blood" style="color:var(--scarlet)">—</b></span>
+          <span>Keys <b id="dg-keys" style="color:var(--gold)">0</b></span>
+        </div>
+        <div id="dg-event" style="font-size:.64rem;line-height:1.7;color:var(--text);min-height:2.5rem;padding:.4rem;background:rgba(0,0,0,.3);border-radius:4px;border:1px solid var(--border);margin-bottom:.5rem"></div>
+        <div class="agrid">
+          <button class="abtn d" id="dg-btn1" onclick="dungeonChoice(0)">—</button>
+          <button class="abtn s" id="dg-btn2" onclick="dungeonChoice(1)">—</button>
+          <button class="abtn" id="dg-btn3" onclick="dungeonChoice(2)">—</button>
+          <button class="abtn gold-btn" onclick="dungeonRetreat()">Retreat<span class="ac">Escape with what you have</span></button>
+        </div>
+      </div>
+      <div class="card" style="padding:.5rem">
+        <div class="ptitle">Delve Log</div>
+        <div id="dg-log" style="height:140px;overflow-y:auto;font-size:.58rem;line-height:1.65;color:var(--muted)"></div>
+      </div>
+    </div>
+    <div id="dungeon-select">
+      <div class="sec-lbl">Choose Your Dungeon</div>
+      <div id="dg-list"></div>
+    </div>
+    <button class="nbtn" onclick="nxt()">Pass Into the Next Night</button>
+  </div>
+
+  <div class="pane" id="pane-log">
+    <div class="card" style="padding:.5rem">
+      <div class="ptitle">Chronicle of Blood — Night <span id="log-night">1</span></div>
+      <div id="logbox"></div>
+    </div>
+    <button class="nbtn" onclick="nxt()">Pass Into the Next Night</button>
+  </div>
 </div>
 
-<div id="upg">
-  <h2>LEVEL UP</h2>
-  <p>CHOOSE AN UPGRADE</p>
-  <div id="ucards"></div>
-</div>
+<!-- ═══ DEATH ═══ -->
 
-<div id="scr">
-  <h1>VOID HUNTER</h1>
-  <p>LEFT THUMB — MOVE<br>RIGHT THUMB — AIM + FIRE</p>
-  <small>AUTO-FIRES WHILE AIMING</small>
-  <button id="go">ENTER THE VOID</button>
+<div id="s-death" class="scr">
+  <div class="dtitle">DESTROYED</div>
+  <p id="dreason" style="font-style:italic;color:var(--muted);font-size:.85rem;font-family:'IM Fell English',serif;max-width:280px;text-align:center"></p>
+  <div class="dstats" id="dstats"></div>
+  <button class="btnp" style="max-width:250px" onclick="goIntro()">Rise Again</button>
 </div>
 
 <script>
-window.addEventListener('load', function() {
+// ═══════════════════════════ DATA ═══════════════════════════
+const ORIG={
+  noble:  {str:7,agi:5,wis:5,cha:8, gold:30,maxHp:105,maxBl:100},
+  plague: {str:5,agi:8,wis:7,cha:5, gold:10,maxHp:115,maxBl:100},
+  warrior:{str:10,agi:6,wis:4,cha:5,gold:10,maxHp:130,maxBl:90},
+  witch:  {str:4,agi:5,wis:9,cha:8, gold:15,maxHp:90,maxBl:120},
+};
+const TIERS=[
+  {name:"Newborn",    nx:100,  powers:["Blood Sense","Basic Fangs"]},
+  {name:"Fledgling",  nx:300,  powers:["Mist Form","Hypnotic Gaze"]},
+  {name:"Neonate",    nx:700,  powers:["Wall Crawl","Swift Strike"]},
+  {name:"Ancilla",    nx:1500, powers:["Dominate Mind","Blood Rage"]},
+  {name:"Elder",      nx:3000, powers:["Shapeshift","Psychic Shield"]},
+  {name:"Methuselah", nx:6000, powers:["True Immortal","Shadow Walk"]},
+  {name:"Ancient",    nx:null, powers:["Reality Tear","Blood God"]},
+];
+const NAMES=["Elena","Marcus","Silas","Isolde","Radovan","Celeste","Dorian","Mirela","Tobias","Raven","Seraphina","Lucius","Vanya","Mordecai","Elspeth","Caspian","Viorel","Thessaly","Draven","Serafina","Oswin","Briar","Aldric","Mireille","Caius","Vesper"];
+const TTYPES=["Scout","Brawler","Seducer","Spy","Scholar","Assassin","Guard","Cultist","Witch-Thrall","Rogue Vampire"];
 
-  var c   = document.getElementById('c');
-  var ctx = null;
-  var W   = window.innerWidth;
-  var H   = window.innerHeight;
+// SHOP ITEMS
+const SHOP_ITEMS=[
+  {id:"silver_dagger",name:"Stolen Silver Dagger",desc:"+3 STR vs hunters",cost:40,type:"equip"},
+  {id:"ritual_cloak",name:"Ritual Cloak",desc:"+10 max blood, -5 hunger/night",cost:55,type:"equip"},
+  {id:"blood_flask",name:"Blood Flask",desc:"Store 30 blood, drink anytime",cost:35,type:"equip"},
+  {id:"iron_coffin",name:"Iron-Lined Coffin",desc:"+20 max HP, +5 HP/rest",cost:70,type:"equip"},
+  {id:"forged_papers",name:"Forged Noble Papers",desc:"-20 infamy immediately, +CHA",cost:45,type:"consume"},
+  {id:"hunter_map",name:"Hunter's Secret Map",desc:"Reveals hunter positions, -15 infamy",cost:30,type:"consume"},
+  {id:"dark_elixir",name:"Dark Elixir",desc:"+40 XP and +20 blood immediately",cost:50,type:"consume"},
+  {id:"ancient_tome",name:"Ancient Tome Fragment",desc:"+1 to random attribute",cost:60,type:"consume"},
+  {id:"poison_vial",name:"Vial of Deadly Poison",desc:"Next attack on hunter deals +30 dmg",cost:25,type:"consume"},
+  {id:"blood_gem",name:"Blood Gem",desc:"Artifact quality - use for big bonus",cost:80,type:"artifact"},
+];
 
-  function resize() {
-    W = window.innerWidth;
-    H = window.innerHeight;
-    c.width  = W;
-    c.height = H;
-  }
-  resize();
-  ctx = c.getContext('2d');
-  window.addEventListener('resize', resize);
+// QUESTS
+const QUEST_POOL=[
+  {id:"first_blood",title:"First Blood",desc:"Drain your first human completely",goal:"drained",target:1,reward:{xp:50,gold:20},done:false},
+  {id:"five_kills",title:"Predator",desc:"Kill 5 enemies",goal:"kills",target:5,reward:{xp:80,gold:30},done:false},
+  {id:"coven_three",title:"Dark Family",desc:"Build a coven of 3 thralls",goal:"coven_size",target:3,reward:{xp:100,gold:0,blood:40},done:false},
+  {id:"ten_nights",title:"Survivor",desc:"Survive 10 nights",goal:"nights",target:10,reward:{xp:60,str:1},done:false},
+  {id:"rich",title:"Blood Merchant",desc:"Accumulate 150 gold",goal:"gold",target:150,reward:{xp:90,agi:1},done:false},
+  {id:"hunter_slayer",title:"Hunter's Bane",desc:"Kill 3 vampire hunters",goal:"hunter_kills",target:3,reward:{xp:120,wis:1},done:false},
+  {id:"dark_scholar",title:"Dark Scholar",desc:"Study 3 dark tomes",goal:"tomes_studied",target:3,reward:{xp:100,cha:1},done:false},
+  {id:"feared",title:"Feared",desc:"Reach 50 infamy",goal:"infamy",target:50,reward:{xp:70,gold:25},done:false},
+  {id:"ancient_power",title:"Ancient Power",desc:"Reach the Elder tier",goal:"tier",target:4,reward:{xp:200,gold:50},done:false},
+  {id:"ten_coven",title:"Lord of Night",desc:"Build a coven of 10 thralls",goal:"coven_size",target:10,reward:{xp:300,gold:100,str:2},done:false},
+];
 
-  // DOM refs
-  var sv    = document.getElementById('sv');
-  var wv    = document.getElementById('wv');
-  var hpf   = document.getElementById('hpf');
-  var xpf   = document.getElementById('xpf');
-  var annEl = document.getElementById('ann');
-  var cmbEl = document.getElementById('cmb');
-  var bhpEl = document.getElementById('bhp');
-  var bfill = document.getElementById('bfill');
-  var bnmEl = document.getElementById('bname');
-  var wpv   = document.getElementById('wpv');
-  var upgEl = document.getElementById('upg');
-  var ucardsEl = document.getElementById('ucards');
-  var scrEl = document.getElementById('scr');
+// ACHIEVEMENTS
+const ACHIEVES=[
+  {id:"first_turn",name:"Sire",desc:"Turn your first human",check:G=>G.coven.length>=1},
+  {id:"100xp",name:"Awakened",desc:"Earn 100 XP",check:G=>G.xp>=100},
+  {id:"first_hunter",name:"Hunter Slain",desc:"Kill a vampire hunter",check:G=>G.hunter_kills>=1},
+  {id:"sanity_edge",name:"On the Edge",desc:"Sanity below 20",check:G=>G.sanity<=20},
+  {id:"tier2",name:"Rising",desc:"Reach Fledgling",check:G=>G.tier>=1},
+  {id:"artifact",name:"Relic Seeker",desc:"Find your first artifact",check:G=>G.artifacts>=1},
+  {id:"full_blood",name:"Sated",desc:"Fill blood to maximum",check:G=>G.blood>=G.maxBl},
+  {id:"fifty_gold",name:"Blood Wealth",desc:"Have 50 gold",check:G=>G.gold>=50},
+  {id:"tavern",name:"Shadow Landlord",desc:"Control a tavern",check:G=>G.tavern},
+  {id:"lieutenant",name:"Commander",desc:"Promote a lieutenant",check:G=>G.coven.some(m=>m.lt)},
+];
 
-  // ---- helpers ----
-  function rnd(a,b){ return a + Math.random()*(b-a); }
-  function clamp(v,lo,hi){ return v<lo?lo:v>hi?hi:v; }
-  function d2(ax,ay,bx,by){ var dx=ax-bx,dy=ay-by; return Math.sqrt(dx*dx+dy*dy); }
-  function pi2(){ return Math.PI*2; }
+let G=null, dead=false, chosenO="noble";
 
-  // ---- weapons ----
-  var WP = {
-    cannon: {name:'CANNON', col:'#88ccff', spd:13, br:4,  spr:0,    cnt:1, cd:9,  dmg:1, exp:false},
-    spread: {name:'SPREAD', col:'#88ffcc', spd:11, br:4,  spr:0.22, cnt:3, cd:11, dmg:1, exp:false},
-    laser:  {name:'LASER',  col:'#ff88ff', spd:19, br:3,  spr:0,    cnt:1, cd:4,  dmg:1, exp:false},
-    rocket: {name:'ROCKET', col:'#ffaa44', spd:8,  br:6,  spr:0,    cnt:1, cd:22, dmg:4, exp:true},
-    dual:   {name:'DUAL',   col:'#44ffff', spd:13, br:4,  spr:0,    cnt:2, cd:7,  dmg:1, exp:false},
+// ═══ SCREEN ═══
+function ss(id){["s-intro","s-game","s-death"].forEach(s=>document.getElementById(s).classList.remove("show"));document.getElementById(id).classList.add("show");}
+ss("s-intro");
+
+function pO(btn){document.querySelectorAll('.obtn').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');chosenO=btn.dataset.o;}
+
+function startGame(){
+  const n=document.getElementById('vn').value.trim();
+  if(!n){toast("Enter your name.","bad");return;}
+  const o=ORIG[chosenO];
+  G={
+    name:n,night:1,
+    hp:o.maxHp,maxHp:o.maxHp,
+    blood:55,maxBl:o.maxBl,
+    hunger:0,sanity:100,reputation:0,
+    xp:0,tier:0,
+    gold:o.gold,
+    kills:0,drained:0,hunter_kills:0,tomes_studied:0,
+    infamy:0,artifacts:0,trophies:0,
+    wardHP:0,
+    str:o.str,agi:o.agi,wis:o.wis,cha:o.cha,
+    coven:[],effects:[],equip:[],
+    tavern:false,spyNet:false,lairLvl:1,lairGuard:null,
+    puppets:0,blackmail_targets:[],
+    quests:QUEST_POOL.map(q=>({...q,progress:0})),
+    achievesDone:[],
+    wevents:[],
+    // Map & Dungeon
+    mapControl:{},   // location id -> nights_controlled
+    dungeon:null,    // active dungeon state
+    dungeonCleared:[],  // ids of cleared dungeons
+    // Survival
+    exposure:0,      // 0-100, rises when no lair / outdoors
+    bloodRot:0,      // 0-100, rises when blood is low for long, causes HP drain
+    shelter:true,    // has safe shelter tonight
   };
+  dead=false;
+  buildShop();
+  renderAll();
+  ss("s-game");
+  log(n+" awakens from the grave. The darkness welcomes you.","night");
+  log("You are a Newborn. Feed. Learn. Build your coven. Conquer the night.","info");
+  addWE("The local church has begun blessing roads at dusk.");
+  addWE("Travellers whisper of shadows that move against the wind.");
+  checkQuests();
+}
 
-  var UPGS = [
-    {n:'SPREAD', d:'3-way fire',      fn:function(g){g.pl.wp='spread';}},
-    {n:'LASER',  d:'Rapid-fire',      fn:function(g){g.pl.wp='laser';}},
-    {n:'ROCKET', d:'Explosive shots', fn:function(g){g.pl.wp='rocket';}},
-    {n:'DUAL',   d:'Twin fire',       fn:function(g){g.pl.wp='dual';}},
-    {n:'SPEED',  d:'40% faster',      fn:function(g){g.pl.spd=Math.min(g.pl.spd*1.4,9);}},
-    {n:'SHIELD', d:'Block one hit',   fn:function(g){g.pl.shld=true;}},
-    {n:'HEAL',   d:'Restore 50 HP',   fn:function(g){g.pl.hp=Math.min(g.pl.mhp,g.pl.hp+50);}},
-    {n:'POWER',  d:'Damage x2',       fn:function(g){g.pl.dmg*=2;}},
-    {n:'MAGNET', d:'Pull in orbs',    fn:function(g){g.pl.mag=true;}},
-  ];
+function tab(id,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('pane-'+id).classList.add('on');
+  if(id==='map')setTimeout(drawMap,50);
+  if(id==='dungeon')renderDungeonSelect();
+}
 
-  // ---- bg ----
-  var neb=[], sts=[];
-  function mkBg(){
-    var i; neb=[]; sts=[];
-    for(i=0;i<5;i++) neb.push({x:Math.random(),y:Math.random(),r:0.2+Math.random()*0.4,h:180+Math.random()*140,a:0.04+Math.random()*0.07});
-    for(i=0;i<160;i++) sts.push({x:Math.random(),y:Math.random(),r:0.2+Math.random()*1.3,t:Math.random()*6.28,s:0.01+Math.random()*0.04});
+// ═══ HELPERS ═══
+const rng=()=>Math.random(),roll=n=>Math.floor(Math.random()*n)+1,pick=a=>a[Math.floor(Math.random()*a.length)];
+const rn=()=>pick(NAMES),clamp=(v,lo,hi)=>Math.max(lo,Math.min(hi,v));
+function addBl(n){G.blood=clamp(G.blood+n,0,G.maxBl);}
+function addHP(n){G.hp=clamp(G.hp+n,0,G.maxHp);}
+function rHunger(n){G.hunger=clamp(G.hunger-n,0,100);}
+function rSanity(n){G.sanity=clamp(G.sanity+n,0,100);}
+function addInfamy(n){G.infamy=clamp(G.infamy+n,0,100);}
+function addRep(n){G.reputation=clamp(G.reputation+n,0,100);}
+function hasEquip(id){return G.equip.includes(id);}
+function hasEffect(n){return G.effects.some(e=>e.n===n);}
+function addEffect(n,turns){G.effects=G.effects.filter(e=>e.n!==n);G.effects.push({n,turns});}
+function addWE(msg){G.wevents.unshift(msg);if(G.wevents.length>8)G.wevents.pop();}
+
+function addXP(n){
+  G.xp+=n;
+  while(G.tier<TIERS.length-1&&G.xp>=TIERS[G.tier].nx){
+    G.tier++;
+    G.maxHp+=30;G.hp=Math.min(G.maxHp,G.hp+30);
+    G.maxBl+=20;G.str=Math.min(20,G.str+2);G.agi=Math.min(20,G.agi+2);
+    G.wis=Math.min(20,G.wis+1);G.cha=Math.min(20,G.cha+1);
+    log("ASCENDED TO "+TIERS[G.tier].name.toUpperCase()+"! "+TIERS[G.tier].powers.join(' & ')+" unlocked. Max HP and Blood increased.","crit");
+    toast(TIERS[G.tier].name+"!","crit");
   }
-  mkBg();
+}
 
-  // ---- state ----
-  var G=null, raf=null;
-  var dnums=[], orbs=[];
-  var shk={x:0,y:0,m:0,d:0};
-  function shake(m,d){ if(m>shk.m){shk.m=m;shk.d=d;} }
-  function dmnum(x,y,v,col){ dnums.push({x:x,y:y,v:Math.round(v),c:col||'#fff',l:1,vy:-1.5}); }
-  function orb(x,y,v){ var a=Math.random()*pi2(); orbs.push({x:x,y:y,v:v,r:6,vx:Math.cos(a)*1.5,vy:Math.sin(a)*1.5-1,dead:false}); }
-
-  function newGame(){
-    G={
-      pl:{x:W/2,y:H/2,r:15,spd:3.4,hp:100,mhp:100,inv:0,shld:false,ang:0,wp:'cannon',dmg:1,mag:false,trail:[],xp:0,nxp:80,lv:1},
-      buls:[],ens:[],parts:[],boss:null,
-      sc:0,wv:1,wtmr:0,wact:false,
-      combo:0,ctmr:0,scd:0,tick:0,over:false,upging:false
-    };
-    orbs=[]; dnums=[]; shk={x:0,y:0,m:0,d:0};
-    hud(); spawnWave();
+function checkDeath(reason){
+  if(!G||dead)return false;
+  if(G.hp<=0){
+    if(G.wardHP>0){G.hp=5;G.wardHP=0;log("The blood ward shattered, saving your life!","crit");return false;}
+    dead=true;G.hp=0;setTimeout(()=>die(reason),350);return true;
   }
+  return false;
+}
 
-  function announce(txt){
-    annEl.textContent=txt; annEl.style.opacity='1';
-    setTimeout(function(){ annEl.style.opacity='0'; }, 1800);
+function checkSanity(){
+  if(!G||dead)return false;
+  if(G.sanity<=0&&!hasEffect("FrenzyRecovery")){
+    log("Your mind shatters. You attack in an uncontrollable blood frenzy!","bad");
+    G.hp-=roll(30)+20;addInfamy(15);rSanity(-1);addEffect("FrenzyRecovery",3);
+    if(checkDeath("Destroyed in a blind blood frenzy."))return true;
   }
+  return false;
+}
 
-  function spawnWave(){
-    G.wact=true;
-    if(G.wv%5===0){ spawnBoss(); announce('BOSS WAVE '+G.wv); }
-    else {
-      var n=5+G.wv*2, i;
-      for(i=0;i<n;i++){
-        (function(ms){ setTimeout(function(){ if(G&&G.wact) spawnEn(); }, ms); })(i*160);
-      }
-      announce('WAVE '+G.wv);
+function checkQuests(){
+  if(!G)return;
+  G.quests.forEach(q=>{
+    if(q.done)return;
+    let prog=0;
+    if(q.goal==="drained")prog=G.drained;
+    else if(q.goal==="kills")prog=G.kills;
+    else if(q.goal==="coven_size")prog=G.coven.length;
+    else if(q.goal==="nights")prog=G.night;
+    else if(q.goal==="gold")prog=G.gold;
+    else if(q.goal==="hunter_kills")prog=G.hunter_kills;
+    else if(q.goal==="tomes_studied")prog=G.tomes_studied;
+    else if(q.goal==="infamy")prog=G.infamy;
+    else if(q.goal==="tier")prog=G.tier;
+    q.progress=Math.min(q.target,prog);
+    if(q.progress>=q.target&&!q.done){
+      q.done=true;
+      log("QUEST COMPLETE: "+q.title+"! Reward claimed.","quest");
+      toast("Quest: "+q.title,"quest");
+      if(q.reward.xp)addXP(q.reward.xp);
+      if(q.reward.gold)G.gold+=q.reward.gold;
+      if(q.reward.blood)addBl(q.reward.blood);
+      if(q.reward.str)G.str+=q.reward.str;
+      if(q.reward.agi)G.agi+=q.reward.agi;
+      if(q.reward.wis)G.wis+=q.reward.wis;
+      if(q.reward.cha)G.cha+=q.reward.cha;
     }
-  }
+  });
+  checkAchievements();
+}
 
-  function spawnEn(){
-    if(!G||!G.wact) return;
-    var s=Math.floor(Math.random()*4), x, y;
-    if(s===0){x=rnd(0,W);y=-30;}
-    else if(s===1){x=W+30;y=rnd(0,H);}
-    else if(s===2){x=rnd(0,W);y=H+30;}
-    else{x=-30;y=rnd(0,H);}
-    var r=Math.random(), t='basic';
-    if(G.wv>=6&&r<0.15) t='sniper';
-    else if(G.wv>=4&&r<0.25) t='tank';
-    else if(r<0.2) t='fast';
-    var cf={
-      basic: {r:13,hp:2,        spd:1.2+G.wv*0.12,col:'#cc2020',sc:10,sr:0.4, st:40,schg:0},
-      fast:  {r:9, hp:1,        spd:2.5+G.wv*0.18,col:'#ff6600',sc:20,sr:0.6, st:30,schg:0},
-      tank:  {r:22,hp:7+G.wv,   spd:0.75,         col:'#8800cc',sc:50,sr:0.25,st:60,schg:0},
-      sniper:{r:11,hp:2,        spd:1.0,          col:'#00ccff',sc:35,sr:0,   st:0, schg:120},
-    }[t];
-    G.ens.push({x:x,y:y,t:t,r:cf.r,hp:cf.hp,mhp:cf.hp,spd:cf.spd,col:cf.col,sc:cf.sc,sr:cf.sr,st:rnd(0,cf.st),ang:0,schg:cf.schg,dead:false});
-  }
-
-  function spawnBoss(){
-    var ts=[
-      {n:'VOID TITAN', r:45,hp:200+G.wv*30,col:'#ff00aa',sc:500},
-      {n:'DEATH STAR', r:50,hp:160+G.wv*25,col:'#00ffaa',sc:600},
-      {n:'DARK HERALD',r:38,hp:140+G.wv*20,col:'#ffaa00',sc:700},
-    ];
-    var idx=Math.floor((G.wv-5)/5)%ts.length;
-    if(idx<0)idx=0;
-    var b=ts[idx];
-    G.boss={x:W/2,y:-80,r:b.r,hp:b.hp,mhp:b.hp,col:b.col,nm:b.n,sc:b.sc,orb:0,st:0,rage:false};
-    bnmEl.textContent=b.n;
-    bhpEl.style.display='flex';
-  }
-
-  function bust(x,y,col,n,ms){
-    var i,a,s;
-    for(i=0;i<n;i++){ a=Math.random()*pi2(); s=rnd(1,ms||4); G.parts.push({x:x,y:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,l:1,r:rnd(2,5),col:col,glow:false}); }
-  }
-  function boom(x,y,rad,col){
-    var n=Math.min(Math.floor(rad*1.2),50),i,a,s;
-    for(i=0;i<n;i++){ a=Math.random()*pi2(); s=rnd(1,rad*0.15); G.parts.push({x:x,y:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,l:1,r:rnd(2,7),col:col,glow:true}); }
-    shake(rad*0.35,12);
-  }
-
-  function shoot(ang){
-    var pl=G.pl, w=WP[pl.wp], dm=w.dmg*pl.dmg, i, a, px, py;
-    if(w.cnt===1){
-      a=ang+rnd(-w.spr,w.spr);
-      G.buls.push({x:pl.x,y:pl.y,vx:Math.cos(a)*w.spd,vy:Math.sin(a)*w.spd,r:w.br,l:1,tm:1,col:w.col,dm:dm,exp:w.exp});
-    } else if(w.cnt===2){
-      px=Math.sin(ang)*8; py=-Math.cos(ang)*8;
-      G.buls.push({x:pl.x+px,y:pl.y+py,vx:Math.cos(ang)*w.spd,vy:Math.sin(ang)*w.spd,r:w.br,l:1,tm:1,col:w.col,dm:dm,exp:false});
-      G.buls.push({x:pl.x-px,y:pl.y-py,vx:Math.cos(ang)*w.spd,vy:Math.sin(ang)*w.spd,r:w.br,l:1,tm:1,col:w.col,dm:dm,exp:false});
-    } else {
-      for(i=0;i<w.cnt;i++){ a=ang+(i-(w.cnt-1)/2)*w.spr; G.buls.push({x:pl.x,y:pl.y,vx:Math.cos(a)*w.spd,vy:Math.sin(a)*w.spd,r:w.br,l:1,tm:1,col:w.col,dm:dm,exp:false}); }
+function checkAchievements(){
+  ACHIEVES.forEach(ac=>{
+    if(G.achievesDone.includes(ac.id))return;
+    if(ac.check(G)){
+      G.achievesDone.push(ac.id);
+      log("Achievement unlocked: "+ac.name+" — "+ac.desc,"quest");
+      toast(ac.name+" Unlocked","quest");
     }
-  }
+  });
+}
 
-  function hitEn(e,dm,bx,by){
-    if(e.dead)return; e.hp-=dm; dmnum(e.x,e.y-e.r-6,dm,'#fff'); bust(bx||e.x,by||e.y,e.col,5,4); shake(3,5);
-    if(e.hp<=0) killEn(e);
-  }
-  function killEn(e){
-    if(e.dead)return; e.dead=true; boom(e.x,e.y,e.r*2,e.col);
-    G.sc+=e.sc*G.wv; G.combo++; G.ctmr=120;
-    if(G.combo>=3){ cmbEl.textContent='x'+G.combo+' COMBO'; cmbEl.style.opacity='1'; G.sc+=G.combo*5; }
-    G.pl.xp+=e.sc; if(G.pl.xp>=G.pl.nxp) lvlUp();
-    if(Math.random()<0.35) orb(e.x,e.y,e.sc);
-  }
-  function hitBoss(dm,bx,by){
-    if(!G.boss)return;
-    var b=G.boss, d=dm*G.pl.dmg;
-    b.hp-=d; dmnum(bx||b.x,(by||b.y)-b.r-6,d,'#cc44ff'); bust(bx||b.x,by||b.y,b.col,6,5); shake(5,7);
-    bfill.style.width=Math.max(0,b.hp/b.mhp*100)+'%';
-    if(!b.rage&&b.hp/b.mhp<0.5){ b.rage=true; announce('ENRAGED!'); shake(15,30); }
-    if(b.hp<=0){ boom(b.x,b.y,b.r*4,b.col); G.sc+=b.sc*G.wv; G.boss=null; bhpEl.style.display='none'; announce('BOSS SLAIN!'); shake(20,40); G.pl.hp=Math.min(G.pl.mhp,G.pl.hp+30); }
-  }
-  function hurtPl(dm){
-    var pl=G.pl; if(pl.inv>0)return;
-    if(pl.shld){ pl.shld=false; boom(pl.x,pl.y,30,'#00ccff'); shake(5,10); return; }
-    pl.hp-=dm; pl.inv=35; bust(pl.x,pl.y,'#ff3030',12,4); shake(8,16);
-    if(pl.hp<=0) endGame();
-  }
+// ═══ ACTIONS ═══
+function a(type){
+  if(!G||dead)return;
+  let msg="",ty="good";
 
-  function lvlUp(){
-    var i, pool, card;
-    G.pl.xp-=G.pl.nxp; G.pl.nxp=Math.floor(G.pl.nxp*1.55); G.pl.lv++;
-    G.upging=true;
-    pool=UPGS.slice().sort(function(){ return Math.random()-0.5; }).slice(0,3);
-    ucardsEl.innerHTML='';
-    for(i=0;i<pool.length;i++){
-      (function(u){
-        var card=document.createElement('div'); card.className='uc';
-        card.innerHTML='<div class="ui">+</div><div class="un">'+u.n+'</div><div class="ud">'+u.d+'</div>';
-        function pick(){ u.fn(G); upgEl.style.display='none'; G.upging=false; }
-        card.addEventListener('touchend',function(ev){ ev.preventDefault(); pick(); },false);
-        card.addEventListener('click',pick,false);
-        ucardsEl.appendChild(card);
-      })(pool[i]);
+  switch(type){
+
+    // ─ FEED ─
+    case"stray":{
+      const b=roll(12)+Math.floor(G.agi/3)+2;
+      addBl(b);rHunger(8);addXP(4);rSanity(2);
+      toast("+"+b+" Blood","good");msg="Fed quietly from a stray. +"+b+" blood.";break;
     }
-    upgEl.style.display='flex';
-  }
-
-  function hud(){
-    var pl=G.pl;
-    sv.textContent=''+G.sc;
-    wv.textContent=''+G.wv;
-    hpf.style.width=clamp(pl.hp/pl.mhp*100,0,100)+'%';
-    xpf.style.width=clamp(pl.xp/pl.nxp*100,0,100)+'%';
-    wpv.textContent=WP[pl.wp].name+' L'+pl.lv;
-  }
-
-  // ---- input ----
-  var jAct=false, jOx=0, jOy=0, jDx=0, jDy=0, jId=null;
-  var aAct=false, aPx=0, aPy=0, aId=null, aAng=0;
-  var keys={};
-
-  function txy(t){ var r=c.getBoundingClientRect(); return {x:t.clientX-r.left, y:t.clientY-r.top}; }
-
-  c.addEventListener('touchstart',function(ev){
-    ev.preventDefault();
-    var tl=ev.changedTouches, i, t, p;
-    for(i=0;i<tl.length;i++){
-      t=tl[i]; p=txy(t);
-      if(p.x<W*0.5&&!jAct){ jId=t.identifier; jOx=p.x; jOy=p.y; jDx=0; jDy=0; jAct=true; }
-      else if(p.x>=W*0.5&&!aAct){ aId=t.identifier; aPx=p.x; aPy=p.y; aAct=true; if(G)G.scd=0; }
+    case"human":{
+      const ok=rng()<0.55+G.cha*0.025+(hasEquip("ritual_cloak")?0.08:0);
+      if(ok){
+        const b=roll(22)+12+Math.floor(G.str/2);
+        addBl(b);rHunger(22);addXP(14);rSanity(-3);
+        const out=["They stumble away, remembering nothing.","Wiped memory with a whisper.","They'll only remember pleasant dreams.","A deep feed — they'll be weak for days."];
+        toast("+"+b+" Blood","good");msg="Mesmerized "+rn()+". +"+b+" blood. "+pick(out);
+      }else{
+        const d=roll(14)+4;G.hp-=d;addInfamy(3);
+        toast("-"+d+" HP","bad");msg="The human screamed for help! -"+d+" HP, +3 infamy.";ty="bad";
+        if(checkDeath("Killed by an angry mob."))return;
+      }break;
     }
-  },false);
-
-  c.addEventListener('touchmove',function(ev){
-    ev.preventDefault();
-    var tl=ev.changedTouches, i, t, p, dx, dy, d, s;
-    for(i=0;i<tl.length;i++){
-      t=tl[i]; p=txy(t);
-      if(t.identifier===jId){ dx=p.x-jOx; dy=p.y-jOy; d=Math.sqrt(dx*dx+dy*dy); s=Math.min(d/62,1); jDx=d>0?dx/d*s:0; jDy=d>0?dy/d*s:0; }
-      if(t.identifier===aId){ aPx=p.x; aPy=p.y; }
+    case"ambush":{
+      if(rng()<0.5+G.agi*0.022){
+        const b=roll(18)+8;addBl(b);rHunger(18);addXP(10);
+        toast("+"+b+" Blood","good");msg="Dragged "+rn()+" into the dark. Swift. +"+b+" blood.";
+      }else{
+        const d=roll(10)+3;G.hp-=d;addInfamy(5);
+        msg="The target fought back. -"+d+" HP, +5 infamy.";ty="bad";
+        if(checkDeath("Killed while ambushing."))return;
+      }break;
     }
-  },false);
-
-  c.addEventListener('touchend',function(ev){
-    ev.preventDefault();
-    var tl=ev.changedTouches, i, t;
-    for(i=0;i<tl.length;i++){ t=tl[i]; if(t.identifier===jId){jAct=false;jDx=0;jDy=0;jId=null;} if(t.identifier===aId){aAct=false;aId=null;} }
-  },false);
-
-  c.addEventListener('touchcancel',function(){ jAct=false;jDx=0;jDy=0;jId=null;aAct=false;aId=null; },false);
-  window.addEventListener('keydown',function(e){keys[e.key]=true;},false);
-  window.addEventListener('keyup',function(e){keys[e.key]=false;},false);
-  c.addEventListener('mousemove',function(e){ var r=c.getBoundingClientRect(); aPx=e.clientX-r.left; aPy=e.clientY-r.top; },false);
-  c.addEventListener('mousedown',function(){ aAct=true; if(G)G.scd=0; },false);
-  c.addEventListener('mouseup',function(){ aAct=false; },false);
-
-  // ---- update ----
-  function update(){
-    if(!G||G.over||G.upging)return;
-    G.tick++;
-    var pl=G.pl, i, j, k, e, b, o, a, ang, dx, dy, d, tx, ty, shots, bi;
-
-    dx=0; dy=0;
-    if(jAct){dx=jDx;dy=jDy;}
-    else{ if(keys['a']||keys['ArrowLeft'])dx=-1; if(keys['d']||keys['ArrowRight'])dx=1; if(keys['w']||keys['ArrowUp'])dy=-1; if(keys['s']||keys['ArrowDown'])dy=1; if(dx&&dy){dx*=0.707;dy*=0.707;} }
-    pl.x=clamp(pl.x+dx*pl.spd,pl.r,W-pl.r);
-    pl.y=clamp(pl.y+dy*pl.spd,pl.r,H-pl.r);
-
-    if(aAct) aAng=Math.atan2(aPy-pl.y,aPx-pl.x);
-    else aAng=Math.atan2(aPy-pl.y,aPx-pl.x);
-    pl.ang=aAng;
-
-    pl.trail.push({x:pl.x,y:pl.y,t:1});
-    if(pl.trail.length>16) pl.trail.shift();
-    for(i=0;i<pl.trail.length;i++) pl.trail[i].t-=0.06;
-    if(pl.inv>0) pl.inv--;
-
-    if(G.scd>0)G.scd--;
-    if(aAct&&G.scd<=0){ shoot(aAng); G.scd=WP[pl.wp].cd; }
-
-    if(G.ctmr>0){G.ctmr--;if(G.ctmr===0){G.combo=0;cmbEl.style.opacity='0';}}
-
-    for(i=orbs.length-1;i>=0;i--){
-      o=orbs[i];
-      if(pl.mag||d2(o.x,o.y,pl.x,pl.y)<80){ a=Math.atan2(pl.y-o.y,pl.x-o.x); o.x+=Math.cos(a)*5; o.y+=Math.sin(a)*5; }
-      else{ o.x+=o.vx; o.y+=o.vy; o.vy+=0.06; }
-      if(d2(o.x,o.y,pl.x,pl.y)<pl.r+o.r){ G.sc+=o.v; o.dead=true; }
-      if(o.y>H+60) o.dead=true;
-      if(o.dead) orbs.splice(i,1);
+    case"drain":{
+      if(rng()<0.4+G.str*0.025){
+        const b=G.maxBl-G.blood;addBl(b);rHunger(60);G.drained++;addXP(22);addInfamy(8);rSanity(-5);
+        toast("Blood Full!","crit");msg=rn()+" drained to nothing. Blood full. +8 infamy.";ty="crit";
+      }else{
+        const d=roll(30)+18;G.hp-=d;addInfamy(10);
+        toast("Caught! -"+d,"bad");msg="A watchman caught you! -"+d+" HP, +10 infamy.";ty="bad";
+        if(checkDeath("Killed mid-drain by watchmen."))return;
+      }break;
+    }
+    case"market":{
+      if(G.gold<20){toast("Need 20 gold.","bad");return;}
+      G.gold-=20;const b=roll(28)+18;addBl(b);addXP(4);
+      msg="Black market blood. +"+b+" blood.";ty="info";break;
+    }
+    case"noble_feed":{
+      if(rng()<0.35+G.cha*0.03){
+        const b=roll(30)+20,g=roll(20)+10;addBl(b);G.gold+=g;addXP(25);G.drained++;addInfamy(12);rSanity(-8);
+        toast("+"+b+" Blood +"+g+" Gold","crit");msg="Feasted on a noble. +"+b+" blood, +"+g+" gold seized.";ty="crit";
+      }else{
+        const d=roll(35)+20;G.hp-=d;addInfamy(20);
+        toast("Guards! -"+d,"bad");msg="Noble's guards arrived! -"+d+" HP, +20 infamy.";ty="bad";
+        if(checkDeath("Cut down by noble's guards."))return;
+      }break;
+    }
+    case"forest":{
+      const b=roll(20)+5+Math.floor(G.agi/2);addBl(b);rHunger(18);addXP(6);rSanity(5);
+      toast("+"+b+" Blood","good");msg="Hunted wildlife deep in the forest. +"+b+" blood. Isolation was peaceful.";break;
+    }
+    case"lure_victim":{
+      if(rng()<0.4+G.cha*0.04){
+        const b=roll(25)+15;addBl(b);rHunger(20);addXP(15);rSanity(-2);
+        toast("+"+b+" Blood","good");msg="Lured "+rn()+" with haunting music. Fed without a struggle. +"+b+" blood.";
+      }else{
+        msg="No one came. The night was still. Wasted effort.";ty="info";
+      }break;
+    }
+    case"gorge":{
+      if(G.blood<30){toast("Need 30 blood.","bad");return;}
+      const spent=Math.min(G.blood,40);G.blood-=spent;
+      const heal=spent*2;addHP(heal);
+      toast("+"+heal+" HP","good");msg="Gorged on blood reserves to mend wounds. -"+spent+" blood, +"+heal+" HP.";ty="info";break;
     }
 
-    var bint=Math.max(48-G.wv*2,14);
-    for(i=0;i<G.ens.length;i++){
-      e=G.ens[i]; if(e.dead)continue;
-      ang=Math.atan2(pl.y-e.y,pl.x-e.x); e.ang=ang;
-      if(e.t==='sniper'){
-        e.schg--; e.x+=Math.cos(ang+0.88)*e.spd; e.y+=Math.sin(ang+0.88)*e.spd;
-        if(e.schg<=0){ G.buls.push({x:e.x,y:e.y,vx:Math.cos(ang)*17,vy:Math.sin(ang)*17,r:3,l:1,tm:0,col:'#00ccff',dm:15,exp:false}); e.schg=rnd(80,150); shake(2,4); }
-      } else {
-        e.x+=Math.cos(ang)*e.spd; e.y+=Math.sin(ang)*e.spd;
-        if(e.sr>0){ e.st--; if(e.st<=0){ if(Math.random()<e.sr) G.buls.push({x:e.x,y:e.y,vx:Math.cos(ang)*4.5,vy:Math.sin(ang)*4.5,r:5,l:1,tm:0,col:e.col,dm:10,exp:false}); e.st=bint; } }
-      }
+    // ─ COMBAT ─
+    case"hunter":{
+      const eq=hasEquip("silver_dagger")?8:0;
+      const myP=G.str+G.agi+G.tier*3+eq+(G.infamy>50?-5:0);
+      const eP=roll(18)+10+(G.infamy>60?8:0);
+      if(rng()<Math.min(0.88,myP/(myP+eP))){
+        const x=48+roll(25),g=roll(18)+8;G.kills++;G.hunter_kills++;G.gold+=g;addXP(x);addBl(22);addInfamy(-10);G.trophies++;
+        toast("Hunter Slain! +"+x+" XP","crit");
+        const loot=["Took their silver crossbow — sold for "+g+" gold.","Claimed holy water vials — "+g+" gold.","Stripped enchanted armor for "+g+" gold.","Looted their hunter's journal — worth "+g+" gold."];
+        msg=rn()+" the hunter destroyed. +"+x+" XP, +"+g+" gold, +1 trophy. "+pick(loot);ty="crit";
+        if(rng()<0.25){const bs=roll(3);G.str=Math.min(20,G.str+bs);log("Learned their fighting style. +"+bs+" STR permanently.","good");}
+      }else{
+        const poison=hasEquip("poison_vial");
+        const d=roll(42)+20-(poison?30:0);G.hp-=Math.max(5,d);
+        if(poison){G.equip=G.equip.filter(e=>e!=="poison_vial");log("Poison vial used — reduced damage!","info");}
+        toast("Wounded -"+d,"bad");msg="The hunter had blessed weapons. You fled with -"+d+" HP.";ty="bad";
+        if(checkDeath("Slain by a vampire hunter."))return;
+      }break;
     }
-
-    if(G.boss){
-      b=G.boss; b.orb+=0.008;
-      tx=W/2+Math.cos(b.orb)*W*0.3; ty=H*0.35+Math.sin(b.orb)*H*0.15;
-      b.x+=(tx-b.x)*0.022; b.y+=(ty-b.y)*0.022;
-      b.st++; var rate=b.rage?18:32;
-      if(b.st>=rate){ b.st=0; shots=b.rage?8:5; for(i=0;i<shots;i++){ a=Math.atan2(pl.y-b.y,pl.x-b.x)+(i/shots)*pi2(); G.buls.push({x:b.x,y:b.y,vx:Math.cos(a)*5.5,vy:Math.sin(a)*5.5,r:7,l:1,tm:0,col:b.col,dm:18,exp:false}); } shake(4,8); }
+    case"vampire":{
+      const et=Math.min(G.tier+1,TIERS.length-1);
+      const myP=G.str+G.wis+G.tier*4;const eP=roll(22)+et*6+10;
+      if(rng()<Math.min(0.75,myP/(myP+eP))){
+        const x=90+roll(50)+G.tier*25,b=roll(40)+25;G.kills++;addXP(x);addBl(b);addInfamy(5);G.trophies++;addRep(15);
+        toast("Rival Destroyed! +"+x+" XP","crit");msg=TIERS[et].name+" rival destroyed. +"+x+" XP, +"+b+" blood, +1 trophy. You absorbed their essence.";ty="crit";
+        if(rng()<0.35){const boost=roll(3)+1;G.str=Math.min(20,G.str+boost);log("Devouring their power: +"+boost+" STR.","crit");}
+      }else{
+        const d=roll(52)+28;G.hp-=d;
+        toast("Overpowered! -"+d,"bad");msg="The "+TIERS[et].name+" overwhelmed you. -"+d+" HP.";ty="bad";
+        if(checkDeath("Destroyed by a rival vampire."))return;
+      }break;
     }
-
-    for(i=0;i<G.buls.length;i++){ b=G.buls[i]; b.x+=b.vx; b.y+=b.vy; if(b.x<-50||b.x>W+50||b.y<-50||b.y>H+50)b.l=0; }
-
-    for(i=0;i<G.buls.length;i++){
-      b=G.buls[i]; if(b.tm!==1||b.l===0)continue;
-      for(j=0;j<G.ens.length;j++){
-        e=G.ens[j]; if(e.dead)continue;
-        if(d2(b.x,b.y,e.x,e.y)<b.r+e.r){
-          b.l=0;
-          if(b.exp){ boom(b.x,b.y,50,'#ffaa44'); for(k=0;k<G.ens.length;k++){ if(!G.ens[k].dead&&d2(b.x,b.y,G.ens[k].x,G.ens[k].y)<55) hitEn(G.ens[k],b.dm*0.7,b.x,b.y); } if(G.boss&&d2(b.x,b.y,G.boss.x,G.boss.y)<55) hitBoss(b.dm,b.x,b.y); }
-          else hitEn(e,b.dm,b.x,b.y);
-          break;
+    case"raid":{
+      const ch=0.5+G.agi*0.018+G.coven.length*0.06;
+      if(rng()<ch){
+        const b=roll(26)+10,g=roll(20)+10,x=22+roll(14);G.gold+=g;G.drained+=roll(2);addBl(b);addXP(x);addInfamy(7);
+        toast("Village Raided!","good");msg="Swept through the village. +"+b+" blood, +"+g+" gold, +"+x+" XP.";
+      }else{
+        const d=roll(26)+8;G.hp-=d;addInfamy(4);
+        toast("Repelled! -"+d,"bad");msg="Village bell rang — armed men drove you off. -"+d+" HP.";ty="bad";
+        if(checkDeath("Killed during village raid."))return;
+      }break;
+    }
+    case"manor":{
+      if(rng()<0.3+G.str*0.02+G.coven.length*0.04){
+        const g=roll(60)+40,x=40+roll(25);G.gold+=g;addXP(x);addInfamy(15);G.drained++;
+        toast("+"+g+" Gold!","crit");msg="Sacked the manor of Lord "+rn()+". +"+g+" gold, +"+x+" XP.";ty="crit";
+        if(rng()<0.3){G.artifacts++;log("Found a strange relic in the vault. +1 Artifact.","info");}
+      }else{
+        const d=roll(45)+25;G.hp-=d;addInfamy(20);
+        toast("Ambushed! -"+d,"bad");msg="Manor guards and a hunter were waiting! -"+d+" HP, +20 infamy.";ty="bad";
+        if(checkDeath("Killed in manor ambush."))return;
+      }break;
+    }
+    case"patrol":{
+      if(rng()<0.6+G.agi*0.02){
+        const x=28+roll(15);addXP(x);addInfamy(-12);addBl(10);G.kills++;
+        toast("Patrol Eliminated","good");msg="Eliminated guard patrol silently. +"+x+" XP, -12 infamy.";
+      }else{
+        const d=roll(22)+8;G.hp-=d;addInfamy(8);
+        toast("Spotted! -"+d,"bad");msg="Patrol was larger than expected. -"+d+" HP, +8 infamy.";ty="bad";
+        if(checkDeath("Cut down by guards."))return;
+      }break;
+    }
+    case"werewolf":{
+      const myP=G.str*2+G.tier*5;const eP=roll(25)+20;
+      if(rng()<Math.min(0.7,myP/(myP+eP))){
+        const x=70+roll(40);addXP(x);G.trophies+=2;G.kills++;addRep(20);rSanity(-15);
+        toast("Werewolf Slain!","crit");msg="A werewolf fell to your fangs! +"+x+" XP, +2 trophies. The beast fight was exhilarating and disturbing.";ty="crit";
+        G.str=Math.min(20,G.str+1);log("The werewolf's ferocity taught you something. +1 STR.","good");
+      }else{
+        const d=roll(55)+35;G.hp-=d;rSanity(-20);
+        toast("Mauled! -"+d,"bad");msg="The werewolf mauled you terribly. -"+d+" HP. Barely survived.";ty="bad";
+        if(checkDeath("Torn apart by a werewolf."))return;
+      }break;
+    }
+    case"defend":{
+      const cb=G.coven.length*3+(G.lairGuard?10:0);
+      if(rng()<0.62+cb*0.01){
+        addXP(24);G.coven.forEach(m=>m.power++);addInfamy(-6);addRep(8);
+        toast("+24 XP","good");msg="Repelled intruders. Coven hardened. +24 XP, -6 infamy, +8 reputation.";
+      }else{
+        const d=roll(20)+5;G.hp-=d;
+        if(G.coven.length>0&&!G.lairGuard){
+          const wnd=G.coven[roll(G.coven.length)-1];
+          wnd.hp=Math.max(1,wnd.hp-15);
+          log(wnd.name+" was badly wounded defending the lair. -15 HP.","bad");
         }
+        msg="Breach! Enemy overpowered your defenses. -"+d+" HP.";ty="bad";
+        if(checkDeath("Killed defending territory."))return;
+      }break;
+    }
+    case"bounty":{
+      if(rng()<0.55+G.str*0.02){
+        const g=roll(35)+20,x=35+roll(20);G.gold+=g;addXP(x);G.kills++;G.trophies++;addRep(10);
+        toast("+"+g+" Gold Bounty","good");msg="Contract fulfilled. Target eliminated. +"+g+" gold, +"+x+" XP, +1 trophy.";
+      }else{
+        const d=roll(28)+12;G.hp-=d;addInfamy(6);
+        msg="Target was better protected than expected. -"+d+" HP.";ty="bad";
+        if(checkDeath("Killed completing a bounty contract."))return;
+      }break;
+    }
+
+    // ─ RECOVER ─
+    case"rest":{
+      const bonus=hasEquip("iron_coffin")?5:0;
+      const h=roll(28)+12+Math.floor(G.wis/2)+bonus;addHP(h);G.hunger=Math.min(100,G.hunger+8);rSanity(5);addXP(6);
+      toast("+"+h+" HP","good");msg="Rested in the coffin. +"+h+" HP.";ty="info";break;
+    }
+    case"meditate":{
+      const hr=16+Math.floor(G.wis/2);rHunger(hr);G.wis=Math.min(20,G.wis+1);addXP(12);rSanity(15);addRep(3);
+      toast("Hunger -"+hr,"good");msg="Deep meditation. Hunger -"+hr+", +1 WIS, +15 sanity.";ty="info";break;
+    }
+    case"hide":{addInfamy(-15);addXP(5);rSanity(8);
+      toast("-15 Infamy","good");msg="Spent the night hidden in a crypt. Infamy fades. -15 infamy.";ty="info";break;
+    }
+
+    // ─ DARK ARTS ─
+    case"tome":{
+      if(G.gold<30){toast("Need 30 gold.","bad");return;}
+      G.gold-=30;G.wis=Math.min(20,G.wis+1);addXP(35);rSanity(-8);G.tomes_studied++;
+      const bonuses=[
+        ()=>{G.maxBl=Math.min(200,G.maxBl+10);return"Blood capacity expanded. +10 max blood.";},
+        ()=>{G.str=Math.min(20,G.str+2);return"+2 STR from dark physical training."},
+        ()=>{G.cha=Math.min(20,G.cha+2);return"+2 CHA from mastering the dark tongue."},
+        ()=>{G.agi=Math.min(20,G.agi+2);return"+2 AGI from shadow perception."},
+        ()=>{addXP(40);return"+40 bonus XP from advanced theory."},
+        ()=>{addRep(15);return"+15 Reputation among vampiric circles."},
+      ];
+      const r=pick(bonuses)();
+      toast("Tome Studied","info");msg="Studied forbidden texts. +35 XP, +1 WIS. "+r;ty="info";break;
+    }
+    case"ritual":{
+      if(G.blood<50){toast("Need 50 blood.","bad");return;}
+      G.blood-=50;const x=85+roll(45);addXP(x);rSanity(-15);addInfamy(5);addRep(12);
+      toast("+"+x+" XP!","crit");msg="Blood ritual under moonless sky. +"+x+" XP. The dark energies leave their mark.";ty="crit";break;
+    }
+    case"artifact_seek":{
+      rSanity(-10);addXP(18);
+      if(rng()<0.44+G.wis*0.025){
+        G.artifacts++;
+        const found=["an obsidian fang pendant","a sealed reliquary of power","a vampire court signet ring","a tome bound in strange leather","a vial of ancient blood","a cursed mirror shard"];
+        toast("Artifact Found!","crit");msg="Found "+pick(found)+" in a forgotten place. +1 Artifact.";ty="crit";
+      }else if(rng()<0.4){
+        const d=roll(25)+10;G.hp-=d;rSanity(-10);
+        msg="The ruins were guarded by a wraith. -"+d+" HP before you escaped.";ty="bad";
+        if(checkDeath("Destroyed by a wraith."))return;
+      }else{
+        msg="Hours in ancient ruins yielded only disturbing visions. +18 XP.";ty="info";
+      }break;
+    }
+    case"artifact_use":{
+      if(G.artifacts<1){toast("No artifacts.","bad");return;}
+      G.artifacts--;
+      const outcomes=[
+        ()=>{addHP(55+roll(30));return"Relic pulsed healing energy. +"+(55+roll(30))+" HP.";},
+        ()=>{addXP(130);return"Dark energy flooded you. +130 XP.";},
+        ()=>{G.str+=3;G.agi+=2;return"Artifact empowered your body. +3 STR, +2 AGI.";},
+        ()=>{G.blood=G.maxBl;return"Life-force filled you. Blood maxed.";},
+        ()=>{G.maxHp+=25;G.hp+=25;return"Artifact expanded your endurance. +25 Max HP.";},
+        ()=>{const g=roll(90)+50;G.gold+=g;return"Relic crumbled to gold dust. +"+g+" gold.";},
+        ()=>{rSanity(50);return"Ancient calm washed over you. +50 Sanity.";},
+        ()=>{G.wis=Math.min(20,G.wis+3);return"Artifact whispered ancient secrets. +3 WIS.";},
+      ];
+      const r=pick(outcomes)();
+      toast("Artifact Used!","crit");msg="You consumed an artifact. "+r;ty="crit";break;
+    }
+    case"sacrifice_self":{
+      const cost=roll(25)+15;G.hp-=cost;
+      if(G.hp<=1){G.hp=1;}
+      const x=50+cost*2;addXP(x);rSanity(-12);
+      toast("+"+x+" XP","crit");msg="Self-inflicted blood offering. -"+cost+" HP, +"+x+" XP. Pain is power.";ty="crit";
+      if(checkDeath("Bled out in a self-sacrifice ritual."))return;break;
+    }
+    case"commune":{
+      rSanity(-15);addXP(22);
+      const secrets=[
+        ()=>{addWE("The dead revealed a hunter's patrol schedule.");addInfamy(-8);return"Learned hunter movements. -8 infamy."},
+        ()=>{G.wis=Math.min(20,G.wis+1);return"A dead scholar shared knowledge. +1 WIS."},
+        ()=>{const g=roll(20)+10;G.gold+=g;addWE("A ghost led you to a hidden cache.");return"A ghost led you to hidden gold. +"+g+" gold."},
+        ()=>{rSanity(-20);return"The dead showed you things no living mind should see. Heavy sanity damage."},
+        ()=>{addXP(35);return"Absorbed the wisdom of the centuries. +35 bonus XP."},
+      ];
+      const r=pick(secrets)();
+      toast("Vision Received","info");msg="Communed with the dead. "+r;ty="info";break;
+    }
+    case"ward":{
+      if(G.blood<20){toast("Need 20 blood.","bad");return;}
+      G.blood-=20;G.wardHP=30;addEffect("Blood Ward",4);
+      toast("Ward Active","info");msg="Blood circle drawn. Ward absorbs next killing blow.";ty="info";break;
+    }
+    case"scry":{
+      if(G.blood<15){toast("Need 15 blood.","bad");return;}
+      G.blood-=15;addXP(15);
+      const visions=["A hunter is stalking your territory tonight.","A rival vampire is weakened and vulnerable.","An unguarded merchant convoy passes tomorrow.","Church patrol doubled tonight — stay hidden.","A human with royal blood wanders near your domain.","A cache of gold is hidden in the old cemetery.","Three hunters plan a coordinated attack soon.","A werewolf pack moves through the forest."];
+      const v=pick(visions);addWE("Scrying: "+v);
+      toast("Vision Seen","info");msg="Blood scrying complete. Revelation recorded in World tab.";ty="info";break;
+    }
+    case"curse":{
+      if(G.blood<25){toast("Need 25 blood.","bad");return;}
+      G.blood-=25;addXP(20);addInfamy(-10);addEffect("Hunter Curse",5);addWE("A blood curse was woven. Hunters are weakened.");
+      toast("Enemy Cursed","info");msg="Blood curse cast. Hunters' effectiveness reduced for 5 nights.";ty="info";break;
+    }
+    case"siphon":{
+      if(rng()<0.6+G.wis*0.02){
+        const tmp=roll(4)+2;addEffect("Siphon Strength",4);G.str=Math.min(20,G.str+tmp);addXP(22);rSanity(-12);
+        toast("+"+tmp+" STR Temp","crit");msg="Siphoned life essence from a sleeping mortal. +"+tmp+" STR temporarily.";ty="crit";
+      }else{
+        const d=roll(18)+5;G.hp-=d;rSanity(-20);
+        msg="Psychic backlash! -"+d+" HP, heavy sanity damage.";ty="bad";
+        if(checkDeath("Soul backlash killed you."))return;
+      }break;
+    }
+    case"bloodform":{
+      if(G.blood<20){toast("Need 20 blood.","bad");return;}
+      G.blood-=20;G.agi=Math.min(20,G.agi+2);addEffect("Bloodform",3);addXP(18);
+      toast("+2 AGI Active","info");msg="Shifted into a more predatory form. +2 AGI for 3 nights.";ty="info";break;
+    }
+    case"plague_mist":{
+      addInfamy(20);addXP(35);rSanity(-18);addRep(-5);addWE("A mysterious plague mist engulfed the eastern district.");
+      toast("+35 XP Terror","info");msg="Released plague mist over a district. +35 XP, +20 infamy. The city is in panic.";ty="info";break;
+    }
+    case"corrupt":{
+      if(G.gold<40){toast("Need 40 gold.","bad");return;}
+      G.gold-=40;addInfamy(-22);addWE("The city guard captain accepted a bribe. Reports will be buried.");
+      toast("-22 Infamy","good");msg="Bribed the guard captain. Reports suppressed. -22 infamy.";break;
+    }
+    case"fear":{
+      addInfamy(18);addXP(30);rSanity(-10);
+      const feats=["Left a trail of drained bodies through the rival district.","Whispered in the market that the dead walk again.","Arranged corpses in a nightmarish tableau near the church.","Sent anonymous letters signed by a fictional death cult."];
+      addWE("Fear spreads: "+pick(feats));
+      toast("+30 XP","info");msg="Campaign of terror orchestrated. +18 infamy, +30 XP.";ty="info";break;
+    }
+    case"blackmail":{
+      if(rng()<0.45+G.cha*0.04){
+        const g=roll(25)+15;G.gold+=g;addXP(18);G.blackmail_targets.push(rn());
+        toast("+"+g+" Gold","good");msg="Leveraged dark secrets over Lord "+rn()+". +"+g+" gold in silence.";
+      }else{
+        addInfamy(12);const d=roll(15)+5;G.hp-=d;
+        msg="Noble hired assassins instead! -"+d+" HP, +12 infamy.";ty="bad";
+        if(checkDeath("Killed by assassins after blackmail."))return;
+      }break;
+    }
+    case"forge":{
+      addInfamy(-10);addXP(15);addWE("A new identity was forged in city records.");
+      toast("New Identity","info");msg="Forged a new identity. -10 infamy.";ty="info";break;
+    }
+    case"puppet":{
+      if(rng()<0.5+G.cha*0.03){
+        G.puppets++;addXP(28);addInfamy(-8);addWE("A human puppet was placed in a position of authority.");
+        toast("Puppet Created","info");msg="Dominated "+rn()+" and placed them as your puppet in the city. +28 XP, -8 infamy.";ty="info";
+      }else{
+        addInfamy(10);msg="The human's mind resisted domination. +10 infamy from the commotion.";ty="bad";
+      }break;
+    }
+    case"mass_fear":{
+      addInfamy(35);addXP(60);rSanity(-25);
+      addWE("A mass terror event shook the entire region. The name of a vampire is spoken in fear.");
+      toast("+60 XP","crit");msg="Massive terror event. +60 XP, +35 infamy. The entire region trembles.";ty="crit";break;
+    }
+
+    // ─ COVEN ─
+    case"turn":{
+      if(G.blood<30){toast("Need 30 blood.","bad");return;}
+      if(rng()<0.55+G.cha*0.03){
+        G.blood-=30;
+        const m={name:rn(),type:pick(TTYPES),power:roll(10)+5+G.tier*2,nights:0,hp:50,maxHp:50,lt:false,bonded:false,guard:false};
+        G.coven.push(m);addXP(35);
+        toast(m.name+" Turned!","crit");msg=m.name+" ["+m.type+"] joins your coven. Power: "+m.power;ty="crit";
+      }else{
+        const d=roll(12)+3;G.hp-=d;addInfamy(5);
+        toast("Resisted!","bad");msg="Human resisted the dark gift and screamed. -"+d+" HP, +5 infamy.";ty="bad";
+        if(checkDeath("Killed during failed turning."))return;
+      }break;
+    }
+    case"turn_noble":{
+      if(G.blood<50){toast("Need 50 blood.","bad");return;}
+      if(rng()<0.4+G.cha*0.04){
+        G.blood-=50;
+        const m={name:rn(),type:"Noble Thrall",power:roll(15)+15+G.tier*3,nights:0,hp:80,maxHp:80,lt:false,bonded:false,guard:false};
+        G.coven.push(m);addXP(55);addInfamy(10);addRep(10);
+        toast(m.name+" Turned!","crit");msg=m.name+" the Noble joins your coven (power "+m.power+").";ty="crit";
+      }else{
+        const d=roll(20)+10;G.hp-=d;addInfamy(18);
+        toast("Failed!","bad");msg="Noble's family intervened! -"+d+" HP, +18 infamy.";ty="bad";
+        if(checkDeath("Killed turning a noble."))return;
+      }break;
+    }
+    case"lure_cult":{
+      if(G.gold<10){toast("Need 10 gold.","bad");return;}
+      G.gold-=10;
+      const m={name:rn(),type:"Cultist",power:roll(6)+3+G.tier,nights:0,hp:35,maxHp:35,lt:false,bonded:false,guard:false};
+      G.coven.push(m);addXP(18);
+      toast(m.name+" Recruited","info");msg=m.name+" the Cultist joins willingly. Power: "+m.power;ty="info";break;
+    }
+    case"headhunt":{
+      if(rng()<0.3+G.cha*0.04){
+        const m={name:rn(),type:"Rogue Vampire",power:roll(18)+10+G.tier*3,nights:0,hp:70,maxHp:70,lt:false,bonded:false,guard:false};
+        G.coven.push(m);addXP(50);addRep(10);
+        toast(m.name+" Recruited!","crit");msg="Convinced a rogue vampire to join. "+m.name+" [Rogue Vampire] brings experience. Power: "+m.power;ty="crit";
+      }else{
+        const d=roll(25)+10;G.hp-=d;
+        msg="The rogue vampire refused and attacked. -"+d+" HP.";ty="bad";
+        if(checkDeath("Attacked by a rogue vampire."))return;
+      }break;
+    }
+    case"hunt_coven":{
+      if(G.coven.length===0){toast("No coven.","bad");return;}
+      const surviving=[],slain=[];
+      for(const m of G.coven){
+        if(m.guard)continue;
+        const s=0.72+(m.power/120)+(m.bonded?0.1:0)+(m.lt?0.1:0)+(hasEffect("Hunter Curse")?0.05:0);
+        if(rng()<Math.min(0.97,s)){m.power+=roll(2);m.nights++;m.hp=Math.min(m.maxHp,m.hp+5);surviving.push(m);}
+        else slain.push(m);
       }
-      if(b.l&&G.boss&&d2(b.x,b.y,G.boss.x,G.boss.y)<b.r+G.boss.r){ b.l=0; if(b.exp){boom(b.x,b.y,50,'#ffaa44');hitBoss(b.dm*1.5,b.x,b.y);}else hitBoss(b.dm,b.x,b.y); }
+      const guards=G.coven.filter(m=>m.guard);
+      G.coven=[...surviving,...guards];
+      const tp=surviving.reduce((s,m)=>s+m.power,0);
+      const l=Math.floor(tp/3)+roll(15)+surviving.length*3;
+      const b=Math.floor(tp/4)+roll(10)+surviving.length*2;
+      const x=10+roll(8)+surviving.length*3;
+      G.gold+=l;addBl(b);addXP(x);
+      slain.forEach(m=>log(m.name+" ["+m.type+"] was destroyed while hunting. Gone forever.","bad"));
+      if(!slain.length)msg="All "+surviving.length+" thrall(s) returned safely. +"+l+" gold, +"+b+" blood, +"+x+" XP.";
+      else if(!surviving.length){msg="The entire hunting party was wiped out. +"+l+" gold recovered from the carnage.";ty="bad";toast("Coven Wiped!","bad");}
+      else{msg=surviving.length+" survived, "+slain.length+" lost. +"+l+" gold, +"+b+" blood.";ty="bad";toast(slain.length+" Thrall(s) Lost","bad");}
+      break;
+    }
+    case"spy_coven":{
+      if(G.coven.length===0){toast("No coven.","bad");return;}
+      const spy=G.coven.find(m=>["Spy","Seducer","Scholar","Noble Thrall"].includes(m.type)&&!m.guard)||G.coven.find(m=>!m.guard)||G.coven[0];
+      if(rng()<0.65+(spy.power/100)){
+        const g=roll(20)+10,x=25+roll(15);G.gold+=g;addXP(x);addInfamy(-8);
+        addWE(spy.name+" returned with intelligence on hunter movements.");
+        spy.power+=2;spy.nights++;
+        toast("+"+g+" Gold Intel","good");msg=spy.name+" completed espionage. +"+g+" gold, +"+x+" XP, -8 infamy.";
+      }else{
+        if(rng()<0.5||(spy.bonded)){
+          spy.power=Math.max(1,spy.power-4);addInfamy(10);
+          msg=spy.name+" was captured and barely escaped. -4 power, +10 infamy.";ty="bad";
+        }else{
+          G.coven=G.coven.filter(m=>m!==spy);addInfamy(15);
+          toast(spy.name+" Lost","bad");msg=spy.name+" was caught and executed. +15 infamy.";ty="bad";
+        }
+      }break;
+    }
+    case"train_coven":{
+      if(G.coven.length===0){toast("No coven.","bad");return;}
+      if(G.blood<20){toast("Need 20 blood.","bad");return;}
+      G.blood-=20;const boost=roll(4)+2;
+      G.coven.forEach(m=>{m.power+=boost;m.hp=Math.min(m.maxHp,m.hp+15);});
+      addXP(20);toast("Coven +"+boost+" Power","good");msg="Drilled thralls through the night. Each gained +"+boost+" power and +15 HP.";break;
+    }
+    case"bond_coven":{
+      if(G.coven.length===0){toast("No coven.","bad");return;}
+      const x=18*G.coven.length;addXP(x);G.cha=Math.min(20,G.cha+1);rSanity(5);
+      G.coven.forEach(m=>m.power++);addRep(G.coven.length*2);
+      toast("+"+x+" XP +1 CHA","good");msg="Blood bond ritual with "+G.coven.length+" members. +"+x+" XP, +1 CHA.";ty="info";break;
+    }
+    case"promote":{
+      if(G.coven.length===0){toast("No coven.","bad");return;}
+      const best=G.coven.reduce((a,b)=>a.power>b.power?a:b);
+      if(best.lt){msg="Your strongest is already a lieutenant.";ty="info";break;}
+      best.lt=true;best.power+=8;addXP(30);addRep(10);
+      toast(best.name+" Promoted!","crit");msg=best.name+" promoted to Lieutenant. +8 power, greater hunt survival.";ty="crit";break;
+    }
+    case"assign_lair":{
+      if(G.coven.length===0){toast("No coven.","bad");return;}
+      const best=G.coven.find(m=>!m.guard&&!m.lt)||G.coven[0];
+      G.coven.forEach(m=>m.guard=false);
+      best.guard=true;G.lairGuard=best.name;addXP(15);
+      toast(best.name+" Guards Lair","info");msg=best.name+" assigned as lair guardian. Will not be sent on hunts and defends automatically.";ty="info";break;
+    }
+    case"blood_bind":{
+      if(G.blood<20){toast("Need 20 blood.","bad");return;}
+      const unb=G.coven.find(m=>!m.bonded);
+      if(!unb){msg="All coven members are already bonded.";ty="info";break;}
+      G.blood-=20;unb.bonded=true;unb.power+=5;addXP(20);
+      toast(unb.name+" Bound","info");msg=unb.name+" blood-bound. Cannot betray you. +5 power.";ty="info";break;
+    }
+    case"sacrifice":{
+      if(G.coven.length===0){toast("No coven.","bad");return;}
+      const weakest=G.coven.filter(m=>!m.guard).reduce((a,b)=>a.power<b.power?a:b);
+      if(!weakest){msg="No non-guard thralls to sacrifice.";ty="info";break;}
+      G.coven=G.coven.filter(m=>m!==weakest);
+      const b=roll(35)+25;addBl(b);addXP(25);rSanity(-20);addInfamy(5);
+      toast("+"+b+" Blood","crit");msg=weakest.name+" sacrificed. +"+b+" blood, +25 XP. A necessary evil.";ty="bad";break;
     }
 
-    for(i=0;i<G.buls.length;i++){ b=G.buls[i]; if(b.tm!==0||b.l===0)continue; if(d2(b.x,b.y,pl.x,pl.y)<b.r+pl.r){b.l=0;hurtPl(b.dm||10);} }
-    for(i=0;i<G.ens.length;i++){ e=G.ens[i]; if(!e.dead&&d2(e.x,e.y,pl.x,pl.y)<e.r+pl.r) hurtPl(15); }
+    // ─ WORLD ─
+    case"bribe":{
+      if(G.gold<60){toast("Need 60 gold.","bad");return;}
+      G.gold-=60;addInfamy(-30);addWE("Town council bribed — no official vampire hunts this week.");
+      toast("-30 Infamy","good");msg="Bribed the town council. All official hunts suspended. -30 infamy.";break;
+    }
+    case"lair":{
+      const cost=G.lairLvl*40;
+      if(G.gold<cost){toast("Need "+cost+" gold.","bad");return;}
+      G.gold-=cost;G.lairLvl++;G.maxHp+=15;G.hp+=15;addXP(30);
+      addWE("New lair established in the "+pick(["old mill","abandoned church","catacombs","manor cellar","forest cave","ruined tower"])+".");
+      toast("Lair Lvl "+G.lairLvl,"crit");msg="Lair upgraded to level "+G.lairLvl+". +15 max HP, better defenses.";ty="crit";break;
+    }
+    case"tavern":{
+      if(G.tavern){msg="You already control a tavern.";ty="info";break;}
+      if(G.gold<40){toast("Need 40 gold.","bad");return;}
+      G.gold-=40;G.tavern=true;addXP(25);addRep(10);
+      addWE("The Rotting Crow tavern falls under your shadow control.");
+      toast("Tavern Seized","good");msg="Took control of a local tavern. Passive gold income each night.";break;
+    }
+    case"church_deal":{
+      if(rng()<0.3+G.cha*0.03){
+        addInfamy(-35);addRep(20);addXP(40);addWE("A secret truce was struck with the Church. Uneasy peace.");
+        toast("Truce Made","info");msg="Negotiated a dark truce with the Church. -35 infamy, +20 reputation. Uneasy peace.";ty="info";
+      }else{
+        addInfamy(20);const d=roll(30)+15;G.hp-=d;
+        msg="The priest attacked instead of negotiating! -"+d+" HP, +20 infamy.";ty="bad";
+        if(checkDeath("Killed by a crusading priest."))return;
+      }break;
+    }
+    case"rival_coven":{
+      const myP=G.str+G.wis+G.tier*5+G.coven.reduce((s,m)=>s+Math.floor(m.power/5),0);
+      const eP=roll(30)+G.tier*8+20;
+      if(rng()<Math.min(0.65,myP/(myP+eP))){
+        const x=160+roll(80),g=roll(50)+30;addXP(x);G.gold+=g;addInfamy(20);G.kills+=3;addRep(30);G.trophies+=3;
+        addWE("A rival vampire coven was destroyed. The region trembles at your name.");
+        toast("Rival Coven Gone!","crit");msg="Annihilated the rival coven. +"+x+" XP, +"+g+" gold, +3 trophies, +30 reputation.";ty="crit";
+      }else{
+        const d=roll(55)+30;G.hp-=d;
+        const cl=G.coven.filter(m=>!m.guard&&!m.lt).slice(0,Math.min(2,G.coven.length));
+        cl.forEach(m=>G.coven.splice(G.coven.indexOf(m),1));
+        if(cl.length)log(cl.map(m=>m.name).join(", ")+" destroyed in the failed assault.","bad");
+        toast("Defeated! -"+d,"bad");msg="Rival coven was stronger. -"+d+" HP, lost "+cl.length+" thralls.";ty="bad";
+        if(checkDeath("Destroyed by rival coven."))return;
+      }break;
+    }
+    case"spy_network":{
+      if(G.spyNet){msg="Spy network already active.";ty="info";break;}
+      if(G.gold<50){toast("Need 50 gold.","bad");return;}
+      G.gold-=50;G.spyNet=true;addXP(40);addWE("A shadow spy network has been established across the region.");
+      toast("Spy Network Built","info");msg="Spy network established. Each night provides intel and -2 infamy passively.";ty="info";break;
+    }
+    case"ruins":{
+      rSanity(-10);addXP(20);
+      const outcomes=[
+        ()=>{G.artifacts++;addBl(15);return"Found ancient blood vault. +1 Artifact, +15 blood."},
+        ()=>{const d=roll(20)+8;G.hp-=d;if(checkDeath("Ancient guardian."))return null;return"Ancient guardian attacked. -"+d+" HP."},
+        ()=>{const x=45+roll(20);addXP(x);return"+"+x+" bonus XP from carved vampire lore."},
+        ()=>{G.wis=Math.min(20,G.wis+2);return"Ancient memories absorbed. +2 WIS."},
+        ()=>{rSanity(-20);addWE("Horrifying things seen in the ruins.");return"Saw something beyond comprehension. Heavy sanity loss."},
+        ()=>{const g=roll(30)+15;G.gold+=g;return"Found a hidden coin cache. +"+g+" gold."},
+      ];
+      const r=pick(outcomes)();
+      if(r){msg="Explored ancient ruins. "+r;ty="info";}
+      break;
+    }
+    case"witch":{
+      if(G.gold<20){toast("Need 20 gold.","bad");return;}
+      G.gold-=20;addXP(25);
+      const gifts=[
+        ()=>{rSanity(30);return"Potion of clarity. +30 Sanity."},
+        ()=>{G.wis=Math.min(20,G.wis+2);return"+2 WIS from her teachings."},
+        ()=>{addInfamy(-18);addWE("Hunter hideout revealed by the witch.");return"Revealed hunter hideout. -18 infamy."},
+        ()=>{G.maxBl=Math.min(200,G.maxBl+25);return"+25 max blood from dark draught."},
+        ()=>{G.artifacts++;return"She gave you a relic. +1 Artifact."},
+        ()=>{G.cha=Math.min(20,G.cha+2);return"+2 CHA from dark enchantment."},
+      ];
+      const g=pick(gifts)();
+      toast("Witch Gift","info");msg="The hermit witch accepted your gold and gave: "+g;ty="info";break;
+    }
+    case"cemetery":{
+      addXP(22);rSanity(-12);
+      if(rng()<0.5+G.wis*0.03){
+        const b=roll(20)+10;addBl(b);
+        if(rng()<0.35){G.artifacts++; addLog("Found something buried beneath a headstone. +1 Artifact.","info");}
+        msg="Desecrated the old cemetery. +"+b+" blood from shadow energy.";
+      }else{
+        addInfamy(8);const d=roll(15)+5;G.hp-=d;
+        msg="A priest with a torch caught you! -"+d+" HP, +8 infamy.";ty="bad";
+        if(checkDeath("Killed in cemetery by priest."))return;
+      }break;
+    }
+    case"court":{
+      if(rng()<0.4+G.cha*0.04+G.tier*0.04){
+        const x=65+roll(40);addXP(x);G.cha=Math.min(20,G.cha+1);addInfamy(-12);addRep(25);
+        addWE("You made a powerful impression at vampire court. Elders take note.");
+        toast("+"+x+" XP Political","crit");msg="Masterful conduct at court. +"+x+" XP, +1 CHA, -12 infamy, +25 reputation.";ty="crit";
+      }else{
+        const d=roll(30)+10;G.hp-=d;addInfamy(12);
+        addWE("You insulted an Elder at court. Dangerous enemies made.");
+        msg="Misspoke before an Elder. They retaliated. -"+d+" HP, +12 infamy.";ty="bad";
+        if(checkDeath("Executed at vampire court."))return;
+      }break;
+    }
+    case"catacomb":{
+      rSanity(-18);addXP(30);
+      const depth=roll(3);
+      if(depth===3){
+        G.artifacts+=2;addBl(25);addXP(50);addRep(15);
+        toast("Deep Treasure!","crit");msg="Reached the deepest level of the catacombs. +2 Artifacts, +25 blood, +50 XP, +15 reputation.";ty="crit";
+      }else if(depth===2){
+        const d=roll(30)+15;G.hp-=d;G.artifacts++;
+        msg="Fought through catacomb guardians. -"+d+" HP, +1 Artifact.";ty="info";
+        if(checkDeath("Destroyed in the catacombs."))return;
+      }else{
+        const d=roll(45)+25;G.hp-=d;rSanity(-15);
+        msg="Something ancient and terrible lives in the deep catacombs. Barely escaped. -"+d+" HP.";ty="bad";
+        if(checkDeath("Consumed by catacomb horrors."))return;
+      }break;
+    }
+    case"harbor":{
+      if(rng()<0.55+G.cha*0.02){
+        const g=roll(40)+25;G.gold+=g;addBl(20);addXP(28);addRep(8);
+        toast("+"+g+" Gold Trade","good");msg="Harbor smugglers exchanged blood across seas. +"+g+" gold, +20 blood.";
+      }else{
+        addInfamy(12);const d=roll(18)+5;G.hp-=d;
+        msg="Customs agents and hunters were at the harbor. -"+d+" HP, +12 infamy.";ty="bad";
+        if(checkDeath("Ambushed at the harbor."))return;
+      }break;
+    }
 
-    for(i=G.buls.length-1;i>=0;i--){ if(G.buls[i].l===0) G.buls.splice(i,1); }
-    for(i=G.ens.length-1;i>=0;i--){ if(G.ens[i].dead) G.ens.splice(i,1); }
-    for(i=0;i<G.parts.length;i++){ var pt=G.parts[i]; pt.x+=pt.vx; pt.y+=pt.vy; pt.vx*=0.91; pt.vy*=0.91; pt.l-=0.03; }
-    for(i=G.parts.length-1;i>=0;i--){ if(G.parts[i].l<=0) G.parts.splice(i,1); }
-    for(i=0;i<dnums.length;i++){ dnums[i].y+=dnums[i].vy; dnums[i].l-=0.025; }
-    for(i=dnums.length-1;i>=0;i--){ if(dnums[i].l<=0) dnums.splice(i,1); }
+    // ─ SHOP ─
+    case"sell_trophy":{
+      if(G.trophies<1){toast("No trophies.","bad");return;}
+      G.trophies--;G.gold+=20;
+      toast("+20 Gold","good");msg="Sold a hunting trophy. +20 gold.";break;
+    }
+    case"sell_blood_vial":{
+      if(G.blood<20){toast("Not enough blood.","bad");return;}
+      G.blood-=20;G.gold+=5;
+      toast("+5 Gold","good");msg="Sold a blood vial. -20 blood, +5 gold.";break;
+    }
+    case"sell_artifacts":{
+      if(G.artifacts<1){toast("No artifacts.","bad");return;}
+      G.artifacts--;G.gold+=50;
+      toast("+50 Gold","good");msg="Sold an artifact on the black market. +50 gold.";break;
+    }
 
-    if(shk.d>0){ shk.d--; var f=shk.d/12; shk.x=(Math.random()-0.5)*shk.m*f; shk.y=(Math.random()-0.5)*shk.m*f; } else{ shk.x=0;shk.y=0;shk.m=0; }
-
-    if(G.wact&&G.ens.length===0&&!G.boss){ G.wact=false; G.wtmr=150; }
-    if(!G.wact&&G.wtmr>0){ G.wtmr--; if(G.wtmr===0){ G.wv++; hud(); spawnWave(); } }
-    hud();
+    default:return;
   }
 
-  // ---- draw ----
-  function draw(){
-    if(!G||!ctx)return;
-    var pl=G.pl, w=WP[pl.wp], i, n, s, o, pt, tr, b, e, grd, a, rad, k, kx, ky, dn, flash;
-
-    ctx.save(); ctx.translate(shk.x,shk.y);
-    ctx.fillStyle='#02020a'; ctx.fillRect(-10,-10,W+20,H+20);
-
-    for(i=0;i<neb.length;i++){
-      n=neb[i];
-      grd=ctx.createRadialGradient(n.x*W,n.y*H,0,n.x*W,n.y*H,n.r*Math.max(W,H));
-      grd.addColorStop(0,'hsla('+n.h+',75%,25%,'+n.a+')');
-      grd.addColorStop(1,'rgba(0,0,0,0)');
-      ctx.fillStyle=grd; ctx.fillRect(0,0,W,H);
-    }
-
-    for(i=0;i<sts.length;i++){
-      s=sts[i]; s.t+=s.s;
-      ctx.globalAlpha=0.3+Math.abs(Math.sin(s.t))*0.5;
-      ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(s.x*W,s.y*H,s.r,0,pi2()); ctx.fill();
-    }
-    ctx.globalAlpha=1;
-
-    ctx.strokeStyle='#0a0a18'; ctx.lineWidth=1;
-    for(i=0;i<W;i+=60){ ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,H); ctx.stroke(); }
-    for(i=0;i<H;i+=60){ ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(W,i); ctx.stroke(); }
-
-    for(i=0;i<orbs.length;i++){ o=orbs[i]; ctx.save(); ctx.shadowBlur=12; ctx.shadowColor='#ffcc00'; ctx.fillStyle='#ffee44'; ctx.beginPath(); ctx.arc(o.x,o.y,o.r,0,pi2()); ctx.fill(); ctx.restore(); }
-
-    for(i=0;i<G.parts.length;i++){ pt=G.parts[i]; ctx.save(); ctx.globalAlpha=pt.l*0.9; if(pt.glow){ctx.shadowBlur=14;ctx.shadowColor=pt.col;} ctx.fillStyle=pt.col; ctx.beginPath(); ctx.arc(pt.x,pt.y,pt.r*pt.l,0,pi2()); ctx.fill(); ctx.restore(); }
-    ctx.globalAlpha=1;
-
-    for(i=0;i<pl.trail.length;i++){ tr=pl.trail[i]; ctx.globalAlpha=Math.max(0,tr.t*0.25); ctx.fillStyle='hsl('+(210+i*3)+',80%,65%)'; ctx.beginPath(); ctx.arc(tr.x,tr.y,5*tr.t,0,pi2()); ctx.fill(); }
-    ctx.globalAlpha=1;
-
-    for(i=0;i<G.buls.length;i++){ b=G.buls[i]; if(b.tm!==0)continue; ctx.save(); ctx.shadowBlur=10; ctx.shadowColor=b.col; ctx.fillStyle=b.col; ctx.beginPath(); ctx.arc(b.x,b.y,b.r,0,pi2()); ctx.fill(); ctx.restore(); }
-    for(i=0;i<G.buls.length;i++){ b=G.buls[i]; if(b.tm!==1)continue; ctx.save(); ctx.shadowBlur=14; ctx.shadowColor=w.col; ctx.fillStyle=w.col; ctx.beginPath(); ctx.arc(b.x,b.y,b.r,0,pi2()); ctx.fill(); if(b.exp){ctx.globalAlpha=0.2;ctx.beginPath();ctx.arc(b.x,b.y,b.r*3.5,0,pi2());ctx.fill();} ctx.restore(); }
-
-    for(i=0;i<G.ens.length;i++){
-      e=G.ens[i]; if(e.dead)continue;
-      ctx.save(); ctx.translate(e.x,e.y); ctx.rotate(e.ang); ctx.shadowBlur=16; ctx.shadowColor=e.col;
-      if(e.t==='sniper'){ var pct=clamp(1-e.schg/120,0,1); ctx.globalAlpha=0.1+pct*0.3; ctx.fillStyle=e.col; ctx.beginPath(); ctx.arc(0,0,e.r+14*pct,0,pi2()); ctx.fill(); ctx.globalAlpha=1; }
-      ctx.fillStyle=e.col;
-      if(e.t==='basic'){ctx.beginPath();ctx.moveTo(e.r,0);ctx.lineTo(0,e.r);ctx.lineTo(-e.r,0);ctx.lineTo(0,-e.r);ctx.closePath();ctx.fill();}
-      else if(e.t==='fast'){ctx.beginPath();ctx.moveTo(e.r,0);ctx.lineTo(-e.r,-e.r*0.7);ctx.lineTo(-e.r*0.4,0);ctx.lineTo(-e.r,e.r*0.7);ctx.closePath();ctx.fill();}
-      else if(e.t==='sniper'){ctx.beginPath();for(k=0;k<3;k++){a=(k/3)*pi2();if(k===0)ctx.moveTo(Math.cos(a)*e.r,Math.sin(a)*e.r);else ctx.lineTo(Math.cos(a)*e.r,Math.sin(a)*e.r);}ctx.closePath();ctx.fill();}
-      else{ctx.beginPath();for(k=0;k<6;k++){a=(k/6)*pi2();if(k===0)ctx.moveTo(Math.cos(a)*e.r,Math.sin(a)*e.r);else ctx.lineTo(Math.cos(a)*e.r,Math.sin(a)*e.r);}ctx.closePath();ctx.fill();ctx.rotate(-e.ang);ctx.fillStyle='#1a1a2a';ctx.fillRect(-20,e.r+5,40,5);ctx.fillStyle=e.col;ctx.fillRect(-20,e.r+5,40*clamp(e.hp/e.mhp,0,1),5);}
-      ctx.restore();
-    }
-
-    if(G.boss){
-      b=G.boss; ctx.save(); ctx.translate(b.x,b.y); ctx.rotate(G.tick*0.015);
-      ctx.shadowBlur=b.rage?40:24; ctx.shadowColor=b.col;
-      ctx.globalAlpha=0.2+Math.sin(G.tick*0.05)*0.08; ctx.strokeStyle=b.col; ctx.lineWidth=3; ctx.beginPath(); ctx.arc(0,0,b.r+18+Math.sin(G.tick*0.08)*5,0,pi2()); ctx.stroke(); ctx.globalAlpha=1;
-      ctx.fillStyle=b.col; ctx.beginPath();
-      for(k=0;k<16;k++){a=(k/16)*pi2();rad=k%2===0?b.r:b.r*0.55;if(k===0)ctx.moveTo(Math.cos(a)*rad,Math.sin(a)*rad);else ctx.lineTo(Math.cos(a)*rad,Math.sin(a)*rad);}
-      ctx.closePath(); ctx.fill();
-      ctx.fillStyle='#fff'; ctx.globalAlpha=0.25; ctx.beginPath(); ctx.arc(0,0,b.r*0.28,0,pi2()); ctx.fill();
-      ctx.restore(); ctx.globalAlpha=1;
-    }
-
-    flash=pl.inv>0&&Math.floor(pl.inv/4)%2===0;
-    ctx.save(); ctx.translate(pl.x,pl.y); ctx.rotate(pl.ang);
-    if(flash) ctx.globalAlpha=0.25;
-    ctx.shadowBlur=pl.shld?30:18; ctx.shadowColor=pl.shld?'#00ccff':'#3355ff';
-    if(pl.shld){ctx.globalAlpha=flash?0.07:0.2;ctx.strokeStyle='#00ccff';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,pl.r+11,0,pi2());ctx.stroke();if(!flash)ctx.globalAlpha=1;}
-    ctx.fillStyle='#ccdeff'; ctx.beginPath(); ctx.moveTo(pl.r,0); ctx.lineTo(-pl.r+4,-pl.r*0.75); ctx.lineTo(-pl.r+2,0); ctx.lineTo(-pl.r+4,pl.r*0.75); ctx.closePath(); ctx.fill();
-    ctx.fillStyle='#88aaff'; ctx.beginPath(); ctx.arc(2,0,5,0,pi2()); ctx.fill();
-    ctx.fillStyle='#5577ff'; ctx.globalAlpha=(flash?0.07:1)*(0.5+Math.random()*0.35); ctx.beginPath(); ctx.arc(-pl.r+3,0,4+Math.random()*2,0,pi2()); ctx.fill();
-    ctx.restore(); ctx.globalAlpha=1;
-
-    if(aAct){
-      ctx.save();
-      ctx.strokeStyle='rgba(255,80,80,0.3)'; ctx.lineWidth=1.5; ctx.setLineDash([4,7]);
-      ctx.beginPath(); ctx.moveTo(pl.x,pl.y); ctx.lineTo(pl.x+Math.cos(aAng)*90,pl.y+Math.sin(aAng)*90); ctx.stroke();
-      ctx.setLineDash([]); ctx.strokeStyle='rgba(255,48,48,0.4)'; ctx.lineWidth=1.5; ctx.beginPath(); ctx.arc(aPx,aPy,11,0,pi2()); ctx.stroke();
-      ctx.restore();
-    }
-    if(jAct){
-      kx=jOx+jDx*62; ky=jOy+jDy*62;
-      ctx.save(); ctx.globalAlpha=0.25; ctx.strokeStyle='rgba(160,160,255,0.25)'; ctx.lineWidth=1.5; ctx.beginPath(); ctx.arc(jOx,jOy,62,0,pi2()); ctx.stroke();
-      ctx.globalAlpha=0.45; ctx.fillStyle='rgba(70,110,255,0.3)'; ctx.beginPath(); ctx.arc(kx,ky,24,0,pi2()); ctx.fill();
-      ctx.strokeStyle='rgba(60,100,255,0.65)'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(kx,ky,24,0,pi2()); ctx.stroke(); ctx.restore();
-    }
-
-    for(i=0;i<dnums.length;i++){
-      dn=dnums[i]; ctx.save(); ctx.globalAlpha=dn.l; ctx.fillStyle=dn.c;
-      ctx.font='bold '+clamp(11+dn.v*0.3,11,24)+'px monospace'; ctx.textAlign='center'; ctx.shadowBlur=6; ctx.shadowColor=dn.c;
-      ctx.fillText(''+dn.v,dn.x,dn.y); ctx.restore();
-    }
-
-    ctx.restore();
+  // ── PASSIVE TICKS ──
+  G.hunger=Math.min(100,G.hunger+4);
+  if(G.hunger>=80&&G.hunger<84)log("Blood hunger screams. Feed before you lose control.","bad");
+  if(G.hunger>=100){
+    G.hp-=15;rSanity(-15);addInfamy(8);
+    log("Blood frenzy! Attacked blindly. -15 HP, -15 sanity, +8 infamy.","bad");
+    if(checkDeath("Consumed by blood frenzy."))return;
   }
+  if(checkSanity())return;
+  if(msg)log(msg,ty);
+  checkQuests();
+  renderAll();
+}
 
-  function endGame(){
-    if(!G)return; G.over=true;
-    if(raf){cancelAnimationFrame(raf);raf=null;}
-    bhpEl.style.display='none';
-    scrEl.innerHTML='<h1 style="font-size:32px;letter-spacing:4px;color:#ff1818">VOID CLAIMED YOU</h1>'
-      +'<p style="color:#555">SCORE <span style="color:#ff3030;font-size:26px">'+G.sc+'</span></p>'
-      +'<small style="color:#333">WAVE '+G.wv+' &nbsp; LEVEL '+G.pl.lv+'</small>'
-      +'<button id="go" class="sbtn">TRY AGAIN</button>';
-    scrEl.style.display='flex';
-    var btn=document.getElementById('go');
-    btn.addEventListener('click',startGame,false);
-    btn.addEventListener('touchend',function(ev){ev.preventDefault();startGame();},false);
+// ─── NEXT NIGHT ───
+function nxt(){
+  if(!G||dead)return;
+  G.night++;
+  G.coven.forEach(m=>{m.nights++;m.power+=Math.floor(Math.random()*2);m.hp=Math.min(m.maxHp,m.hp+8);});
+  G.hunger=Math.min(100,G.hunger+5);
+  G.effects=G.effects.map(e=>({...e,turns:e.turns-1})).filter(e=>e.turns>0);
+  if(G.tavern){const g=roll(12)+5;G.gold+=g;log("The tavern earned "+g+" gold tonight.","info");}
+  if(G.spyNet){addInfamy(-2);const r=["Spy network flagged a hunter moving south.","Your puppets report church activity increasing.","Smuggler contact brought word of a rival weakened.","Network quiet tonight."];addWE(pick(r));}
+  if(G.blackmail_targets.length>0&&rng()<0.5){const g=roll(15)+5;G.gold+=g;log("Blackmail payment received. +"+g+" gold.","info");}
+  if(G.infamy>70&&rng()<0.4){addInfamy(5);addWE("Hunter squads dispatched to hunt the infamous creature.");}
+  if(G.puppets>0&&rng()<0.3){addInfamy(-5);log("One of your puppets suppressed a report. -5 infamy.","info");}
+
+  const evts=[
+    ()=>{const x=roll(22);addXP(x);return"A dying warlock whispered ancient secrets. +"+x+" XP."},
+    ()=>{const g=roll(18)+5;G.gold+=g;return"Merchant wagon tipped near your domain. +"+g+" gold."},
+    ()=>{const b=roll(18);addBl(b);return"Blood-tinged rain fell tonight. +"+b+" blood."},
+    ()=>{const d=roll(12);G.hp=Math.max(1,G.hp-d);return"Silver trap near your lair triggered. -"+d+" HP."},
+    ()=>{rSanity(12);return"Dreamless, silent rest. +12 sanity."},
+    ()=>{if(G.coven.length>0){const m=pick(G.coven);const g=roll(18)+5;G.gold+=g;return m.name+" returned from a personal hunt. +"+g+" gold.";}return"The night passes with quiet dread."},
+    ()=>{G.blood=Math.max(0,G.blood-12);return"Sealed coffin too late. Dawn stole 12 blood."},
+    ()=>{addXP(18);return"Spent the night inscribing symbols of power. +18 XP."},
+    ()=>{addInfamy(-8);return"False rumors spread: the vampire fled the region. -8 infamy."},
+    ()=>{addInfamy(10);return"Witnesses reported your shadow near the church. +10 infamy."},
+    ()=>{const b=roll(15);addBl(b);addXP(12);return"A blood-drunk wandered near your haven. +"+b+" blood, +12 XP."},
+    ()=>{G.maxBl=Math.min(220,G.maxBl+5);return"Blood capacity expanded through dark adaptation. +5 max blood."},
+    ()=>{rSanity(-15);return"Terrible waking nightmares. -15 sanity."},
+    ()=>{const cb=G.coven.length*3;addXP(cb+8);return"Coven performed a minor ritual. +"+(cb+8)+" XP."},
+    ()=>{if(G.artifacts===0&&rng()<0.3){G.artifacts++;return"Found an odd relic near the crossroads. +1 Artifact.";}return"Wind carried whispers of old vampires stirring."},
+    ()=>{addRep(5);return"Your dark deeds are spoken of in hushed tones. +5 reputation."},
+    ()=>{if(G.lairGuard){G.hp=Math.min(G.maxHp,G.hp+10);return G.lairGuard+" kept watch all night. You rested more safely. +10 HP.";}return"Night passes without incident."},
+    ()=>{G.kills++;G.trophies++;addXP(20);addBl(10);return"A lone wanderer blundered into your haven. Dealt with. +1 kill, +1 trophy."},
+  ];
+  const ev=pick(evts)();
+  log("Night "+G.night+". "+ev,"night");
+  addWE("Night "+G.night+": "+ev);
+  if(checkDeath("Did not survive the passing night."))return;
+  if(checkSanity())return;
+  checkQuests();
+  renderAll();
+  nightFlash();
+}
+
+// ─── SHOP BUILD ───
+function buildShop(){
+  const c=document.getElementById('shop-items');if(!c)return;
+  c.innerHTML=SHOP_ITEMS.map(item=>`
+    <div class="shopitem">
+      <div><div class="siname">${item.name}</div><div class="sidesc">${item.desc}</div></div>
+      <div style="display:flex;align-items:center;gap:.3rem;flex-shrink:0">
+        <span class="siprice">${item.cost}g</span>
+        <button class="sibuy" onclick="buyItem('${item.id}')">${G&&G.equip.includes(item.id)?'Owned':'Buy'}</button>
+      </div>
+    </div>`).join('');
+}
+
+function buyItem(id){
+  if(!G)return;
+  const item=SHOP_ITEMS.find(i=>i.id===id);if(!item)return;
+  if(G.gold<item.cost){toast("Need "+item.cost+" gold.","bad");return;}
+  if(item.type==="equip"&&G.equip.includes(id)){toast("Already owned.","bad");return;}
+  G.gold-=item.cost;
+  if(item.type==="equip"){
+    G.equip.push(id);
+    toast(item.name+" Equipped","crit");log("Purchased: "+item.name+". "+item.desc,"info");
+  }else if(item.type==="consume"||item.type==="artifact"){
+    if(item.id==="forged_papers"){addInfamy(-20);G.cha=Math.min(20,G.cha+1);}
+    else if(item.id==="hunter_map"){addInfamy(-15);}
+    else if(item.id==="dark_elixir"){addXP(40);addBl(20);}
+    else if(item.id==="ancient_tome"){const attrs=["str","agi","wis","cha"];const at=pick(attrs);G[at]=Math.min(20,G[at]+1);}
+    else if(item.id==="poison_vial"){G.equip.push("poison_vial");}
+    else if(item.id==="blood_gem"){G.artifacts++;}
+    toast(item.name+" Used","crit");log("Used consumable: "+item.name+". "+item.desc,"info");
   }
+  buildShop();checkQuests();renderAll();
+}
 
-  function loop(){ update(); draw(); raf=requestAnimationFrame(loop); }
+// ─── RENDER ───
+function renderAll(){
+  if(!G)return;
+  // top
+  document.getElementById('ui-name').textContent=G.name;
+  document.getElementById('ui-night').textContent=G.night;
+  document.getElementById('ui-blood').textContent=G.blood;
+  document.getElementById('ui-kills').textContent=G.kills;
+  document.getElementById('ui-coven').textContent=G.coven.length;
+  document.getElementById('ui-gold-top').textContent=G.gold;
+  // tier
+  document.getElementById('ui-tier').textContent=TIERS[G.tier].name;
+  document.getElementById('ui-tiernight').textContent="Night "+G.night+" of Eternity";
+  // bars
+  sb('hp',G.hp,G.maxHp);sb('bl',G.blood,G.maxBl);sb('hu',G.hunger,100);sb('san',G.sanity,100);sb('rep',G.reputation,100);
+  const xf=G.tier>0?TIERS[G.tier-1].nx:0,xc=TIERS[G.tier].nx||(xf+1);
+  const xp=TIERS[G.tier].nx?((G.xp-xf)/(xc-xf))*100:100;
+  document.getElementById('bar-xp').style.width=clamp(xp,0,100)+"%";
+  document.getElementById('ui-hp').textContent=G.hp+(G.wardHP>0?" [Ward:"+G.wardHP+"]":"")+"/"+G.maxHp;
+  document.getElementById('ui-bl').textContent=G.blood+"/"+G.maxBl;
+  document.getElementById('ui-hu').textContent=G.hunger+"/100";
+  document.getElementById('ui-san').textContent=G.sanity+"/100";
+  document.getElementById('ui-rep').textContent=G.reputation+"/100";
+  document.getElementById('ui-xp').textContent=G.xp+"/"+(TIERS[G.tier].nx||"MAX");
+  // attrs
+  document.getElementById('ui-str').textContent=G.str;
+  document.getElementById('ui-agi').textContent=G.agi;
+  document.getElementById('ui-wis').textContent=G.wis;
+  document.getElementById('ui-cha').textContent=G.cha;
+  // resources
+  document.getElementById('ui-gold').textContent=G.gold;
+  document.getElementById('ui-kills2').textContent=G.kills;
+  document.getElementById('ui-drained').textContent=G.drained;
+  document.getElementById('ui-infamy').textContent=G.infamy;
+  document.getElementById('ui-artifacts').textContent=G.artifacts;
+  document.getElementById('ui-trophies').textContent=G.trophies;
+  // effects
+  document.getElementById('ui-effects').innerHTML=G.effects.length?G.effects.map(e=>'<span style="color:var(--scarlet);margin-right:.5rem;font-size:.54rem">'+e.n+' ('+e.turns+'n)</span>').join(''):'None active';
+  // equip
+  document.getElementById('ui-equip').innerHTML=G.equip.length?G.equip.map(id=>{const it=SHOP_ITEMS.find(i=>i.id===id);return it?'<span style="color:var(--gold);margin-right:.5rem;font-size:.54rem">'+it.name+'</span>':'';}).join(''):'No equipment';
+  // powers
+  const ap=[];TIERS.forEach((t,i)=>t.powers.forEach(p=>ap.push({name:p,on:i<=G.tier})));
+  document.getElementById('ui-powers').innerHTML=ap.map(p=>'<li class="'+(p.on?'on':'')+'"><span class="dot '+(p.on?'on':'')+'"></span>'+p.name+'</li>').join('');
+  // world
+  document.getElementById('w-inf').textContent=G.infamy;
+  document.getElementById('w-thr').textContent=G.infamy<25?"Low":G.infamy<50?"Medium":G.infamy<75?"High":"Critical";
+  document.getElementById('w-wlth').textContent=G.gold<30?"Poor":G.gold<100?"Normal":G.gold<300?"Wealthy":"Rich";
+  document.getElementById('w-chu').textContent=G.infamy<30?"Low":G.infamy<60?"Active":"Crusading";
+  document.getElementById('w-lair').textContent=G.lairLvl;
+  document.getElementById('w-rep').textContent=G.reputation;
+  document.getElementById('ui-wevents').innerHTML=G.wevents.map(e=>'<div class="wevent">'+e+'</div>').join('');
+  // coven
+  document.getElementById('ui-covcnt').textContent=G.coven.length;
+  document.getElementById('ui-guard').textContent=G.lairGuard||"None";
+  document.getElementById('ui-covlist').innerHTML=G.coven.length?G.coven.map(m=>'<li class="cmem"><div><div class="cmn">'+(m.lt?'[LT] ':m.guard?'[GRD] ':'')+m.name+(m.bonded?' *':'')+' </div><div class="cmi">'+m.type+' · Night '+m.nights+'</div></div><div class="cmp">PWR '+m.power+'<br><span style="font-size:.42rem;color:var(--green)">HP '+m.hp+'/'+m.maxHp+'</span></div></li>').join(''):'<li class="empty">No thralls</li>';
+  // quests
+  const qa=document.getElementById('ui-quests-active');
+  const active=G.quests.filter(q=>!q.done);
+  qa.innerHTML=active.length?active.map(q=>'<div class="qcard"><div class="qtitle">'+q.title+'</div><div class="qdesc">'+q.desc+'</div><div class="qprog">'+q.progress+' / '+q.target+'</div><div class="qtrack"><div class="qfill" style="width:'+Math.min(100,(q.progress/q.target)*100)+'%"></div></div></div>').join(''):'<div class="empty">All quests complete!</div>';
+  const done=G.quests.filter(q=>q.done);
+  document.getElementById('ui-quests-done').innerHTML=done.length?done.map(q=>'<div style="color:var(--teal);font-size:.52rem;margin-bottom:.2rem">✓ '+q.title+'</div>').join(''):'None yet';
+  // achievements
+  document.getElementById('ui-achieve').innerHTML=ACHIEVES.map(ac=>'<div style="font-size:.52rem;color:'+(G.achievesDone.includes(ac.id)?'var(--gold)':'var(--muted)')+';margin-bottom:.12rem">'+(G.achievesDone.includes(ac.id)?'[X] ':'[ ] ')+ac.name+' — '+ac.desc+'</div>').join('');
+  // shop
+  document.getElementById('shop-gold').textContent=G.gold;
+  document.getElementById('shop-trophies').textContent=G.trophies;
+  document.getElementById('log-night').textContent=G.night;
+}
+function sb(id,v,mx){document.getElementById('bar-'+id).style.width=clamp((v/mx)*100,0,100)+"%";}
 
-  function startGame(){
-    if(raf){cancelAnimationFrame(raf);raf=null;}
-    scrEl.style.display='none'; upgEl.style.display='none'; bhpEl.style.display='none';
-    jAct=false; aAct=false; jDx=0; jDy=0;
-    newGame(); loop();
+function die(reason){
+  renderAll();
+  document.getElementById('dreason').textContent=reason;
+  document.getElementById('dstats').innerHTML=
+    "<div>Nights Survived: "+G.night+"</div>"+
+    "<div>Tier Reached: "+TIERS[G.tier].name+"</div>"+
+    "<div>Total Kills: "+G.kills+"</div>"+
+    "<div>Hunters Slain: "+G.hunter_kills+"</div>"+
+    "<div>Humans Drained: "+G.drained+"</div>"+
+    "<div>Coven Size: "+G.coven.length+"</div>"+
+    "<div>Trophies: "+G.trophies+"</div>"+
+    "<div>Gold: "+G.gold+"</div>"+
+    "<div>Infamy: "+G.infamy+"</div>"+
+    "<div>Reputation: "+G.reputation+"</div>"+
+    "<div>Total XP: "+G.xp+"</div>"+
+    "<div>Quests Done: "+G.quests.filter(q=>q.done).length+"/"+G.quests.length+"</div>"+
+    "<div>Achievements: "+G.achievesDone.length+"/"+ACHIEVES.length+"</div>";
+  ss("s-death");
+}
+function goIntro(){G=null;dead=false;document.getElementById('vn').value='';ss("s-intro");}
+function log(msg,ty){const b=document.getElementById('logbox');if(!b)return;const d=document.createElement('div');d.className='le '+(ty||'info');d.textContent=msg;b.appendChild(d);b.scrollTop=b.scrollHeight;}
+function toast(msg,ty){const t=document.createElement('div');t.className='toast '+(ty||'info');t.textContent=msg;document.getElementById('tc').appendChild(t);setTimeout(()=>t.parentNode&&t.parentNode.removeChild(t),2800);}
+function nightFlash(){const f=document.createElement('div');f.className='nflash';f.innerHTML='Night '+G.night+'<small>of Eternity</small>';document.body.appendChild(f);setTimeout(()=>f.parentNode&&f.parentNode.removeChild(f),1150);}
+
+
+// ═══════════════════════════════════════
+// MAP SYSTEM
+// ═══════════════════════════════════════
+const MAP_LOCS=[
+  {id:'lair',   name:'Your Lair',      x:.50,y:.48, color:'#8b0000', type:'home',    desc:'Your sanctuary. Each lair upgrade increases max HP and resting efficiency.'},
+  {id:'town',   name:'The Town',       x:.30,y:.32, color:'#6a4a1a', type:'urban',   desc:'Bustling settlement. Rich feeding grounds but heavily patrolled. High infamy draws hunters here.'},
+  {id:'forest', name:'Dark Forest',    x:.15,y:.60, color:'#1a3a10', type:'wild',    desc:'Dense woodland teeming with animals. Safe low-yield feeding. Artifacts found in ancient groves.'},
+  {id:'manor',  name:'Blackwood Manor',x:.72,y:.22, color:'#3a2a4a', type:'noble',   desc:'Noble estate with hidden wealth. High-risk raids yield enormous gold and sometimes artifacts.'},
+  {id:'ruins',  name:'Ancient Ruins',  x:.82,y:.72, color:'#2a2a1a', type:'ancient', desc:'Crumbled empire seat. Dark energies linger. Artifacts and lost lore abound.'},
+  {id:'church', name:'The Cathedral',  x:.48,y:.15, color:'#2a1a2a', type:'holy',    desc:'Holy power hub — dangerous to vampires. Infiltrating it silences hunter dispatches for nights.'},
+  {id:'docks',  name:'Harbor Docks',   x:.12,y:.28, color:'#0a2a3a', type:'trade',   desc:'Trade gateway. Smugglers trade blood and artifacts. Gold flows freely after dark.'},
+  {id:'crypt',  name:'Old Crypts',     x:.65,y:.80, color:'#1a0a2a', type:'undead',  desc:'Ancient burial catacombs. Undead gather here. Rituals cost less blood near this place.'},
+  {id:'castle', name:'Ruined Castle',  x:.88,y:.42, color:'#3a0a0a', type:'stronghold',desc:'Crumbled fortress. Dangerous to take but holding it grants coven combat bonuses nightly.'},
+];
+const MAP_ROADS=[['lair','town'],['lair','forest'],['lair','ruins'],['lair','docks'],['town','manor'],['town','church'],['town','docks'],['manor','castle'],['ruins','crypt'],['ruins','castle'],['church','manor'],['forest','docks'],['crypt','castle']];
+let selectedLoc=null;
+
+function drawMap(){
+  if(!G)return;
+  const canvas=document.getElementById('mapCanvas');
+  if(!canvas)return;
+  const W=canvas.parentElement.clientWidth-24;
+  canvas.width=W;canvas.height=Math.round(W*0.65);
+  const ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height;
+  const bg=ctx.createRadialGradient(w*.5,h*.5,10,w*.5,h*.5,h*.8);
+  bg.addColorStop(0,'#0e0006');bg.addColorStop(1,'#060003');
+  ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);
+  ctx.strokeStyle='rgba(58,0,24,.18)';ctx.lineWidth=.5;
+  for(let i=0;i<10;i++){ctx.beginPath();ctx.moveTo(i*w/10,0);ctx.lineTo(i*w/10,h);ctx.stroke();}
+  for(let i=0;i<8;i++){ctx.beginPath();ctx.moveTo(0,i*h/8);ctx.lineTo(w,i*h/8);ctx.stroke();}
+  ctx.strokeStyle='rgba(90,50,20,.35)';ctx.lineWidth=1.5;ctx.setLineDash([4,4]);
+  MAP_ROADS.forEach(([a,b])=>{const la=MAP_LOCS.find(l=>l.id===a),lb=MAP_LOCS.find(l=>l.id===b);if(!la||!lb)return;ctx.beginPath();ctx.moveTo(la.x*w,la.y*h);ctx.lineTo(lb.x*w,lb.y*h);ctx.stroke();});
+  ctx.setLineDash([]);
+  MAP_LOCS.forEach(loc=>{
+    const lx=loc.x*w,ly=loc.y*h,ctrl=(G.mapControl||{})[loc.id]||0,isSel=selectedLoc&&selectedLoc.id===loc.id,isH=loc.id==='lair';
+    if(ctrl>0||isH){ctx.beginPath();ctx.arc(lx,ly,isH?14:11,0,Math.PI*2);ctx.fillStyle=isH?'rgba(139,0,0,.25)':'rgba(100,0,100,.2)';ctx.fill();}
+    if(isSel){ctx.beginPath();ctx.arc(lx,ly,13,0,Math.PI*2);ctx.strokeStyle='#c9a84c';ctx.lineWidth=2;ctx.stroke();}
+    ctx.beginPath();ctx.arc(lx,ly,isH?8:6,0,Math.PI*2);ctx.fillStyle=ctrl>0?'#8e44ad':loc.color;ctx.fill();
+    ctx.strokeStyle=isH?'#e74c3c':(ctrl>0?'#c090e0':'rgba(200,180,140,.4)');ctx.lineWidth=isH?2:1;ctx.stroke();
+    if((G.dungeonCleared||[]).includes(loc.id)){ctx.fillStyle='#c9a84c';ctx.font='bold '+(w*.022)+'px sans-serif';ctx.textAlign='center';ctx.fillText('V',lx,ly-10);}
+    ctx.fillStyle=isH?'#e8c090':(ctrl>0?'#c0a0e0':'rgba(200,180,140,.75)');
+    ctx.font=(isH?'bold ':'')+Math.round(w*.025)+'px Cinzel,serif';ctx.textAlign='center';
+    ctx.fillText(loc.name,lx,ly+(isH?18:15));
+    if(ctrl>0){ctx.fillStyle='rgba(160,120,200,.7)';ctx.font=Math.round(w*.018)+'px sans-serif';ctx.fillText('CTRL '+ctrl+'n',lx,ly+(isH?27:24));}
+  });
+  ctx.fillStyle='rgba(200,180,140,.4)';ctx.font=Math.round(w*.018)+'px sans-serif';ctx.textAlign='left';ctx.fillText('Tap a location to view intel',6,h-6);
+  renderMapControl();
+}
+function mapClick(evt){
+  if(!G)return;
+  const canvas=document.getElementById('mapCanvas'),rect=canvas.getBoundingClientRect();
+  const sx=canvas.width/rect.width,sy=canvas.height/rect.height;
+  const cx=(evt.clientX-rect.left)*sx,cy=(evt.clientY-rect.top)*sy,w=canvas.width,h=canvas.height;
+  let closest=null,bestD=999;
+  MAP_LOCS.forEach(loc=>{const d=Math.hypot(loc.x*w-cx,loc.y*h-cy);if(d<bestD){bestD=d;closest=loc;}});
+  if(closest&&bestD<w*.09){
+    selectedLoc=closest;const ctrl=(G.mapControl||{})[closest.id]||0;
+    const isDg=['ruins','crypt','castle','manor'].includes(closest.id);
+    document.getElementById('map-info').innerHTML='<b style="color:var(--gold)">'+closest.name+'</b><br><span style="font-size:.5rem;color:var(--muted)">'+closest.type.toUpperCase()+'</span><br>'+closest.desc+(ctrl>0?'<br><span style="color:var(--purple)">Controlled for '+ctrl+' night(s).</span>':'')+(isDg?'<br><span style="color:var(--scarlet)">Has a dungeon — visit the Dungeon tab to delve.</span>':'');
+    drawMap();
   }
+}
+function renderMapControl(){
+  if(!G)return;const el=document.getElementById('map-control');if(!el)return;
+  const ctrl=Object.entries(G.mapControl||{}).filter(([,v])=>v>0);
+  if(!ctrl.length){el.innerHTML='<span style="color:var(--muted)">No locations under your control.</span>';return;}
+  el.innerHTML=ctrl.map(([id,n])=>{const l=MAP_LOCS.find(x=>x.id===id);return '<div><b style="color:var(--purple)">'+(l?l.name:id)+'</b> — '+n+' night(s)</div>';}).join('');
+}
 
-  var goBtn=document.getElementById('go');
-  goBtn.addEventListener('click',startGame,false);
-  goBtn.addEventListener('touchend',function(ev){ev.preventDefault();startGame();},false);
+// ═══════════════════════════════════════
+// DUNGEON DELVE SYSTEM
+// ═══════════════════════════════════════
+const DUNGEONS=[
+  {id:'ruins',name:'Shattered Ruins',difficulty:1,floors:4,desc:'Crumbled halls haunted by spirits and traps. Moderate danger, good lore.'},
+  {id:'crypt',name:'Old Crypts',difficulty:2,floors:5,desc:'Bone-lined corridors thick with death energy. Undead roam the deep.'},
+  {id:'castle',name:'Ruined Castle',difficulty:3,floors:6,desc:'Hunters have fortified this place. Extreme danger. Extreme reward.'},
+  {id:'manor',name:'Blackwood Catacombs',difficulty:2,floors:4,desc:'Hidden dungeon beneath the manor wine cellar. Nobles hid dark things here.'},
+];
+const DG_EVENTS=[
+  {text:'A hunter patrol blocks the corridor ahead.',choices:['Fight them (STR roll)','Shadow past (AGI roll)','Intimidate (CHA roll)'],resolve:[
+    g=>{const ok=rng()<Math.min(.85,(g.str+g.tier*2)/(g.str+g.tier*2+12));if(ok){const x=35+roll(20),gd=roll(15)+8;addXP(x);g.gold+=gd;g.kills++;return[true,'Slew the patrol. +'+x+' XP, +'+gd+' gold.'];}else{const d=roll(30)+15;g.hp-=d;return[false,'They wounded you. -'+d+' HP.'];}},
+    g=>{const ok=rng()<Math.min(.85,(g.agi+g.tier*2)/(g.agi+g.tier*2+10));if(ok){return[true,'Slipped past unseen.'];}else{const d=roll(18)+8;g.hp-=d;addInfamy(6);return[false,'Spotted! -'+d+' HP, +6 infamy.'];}},
+    g=>{const ok=rng()<Math.min(.75,(g.cha+g.tier*2)/(g.cha+g.tier*2+10));if(ok){return[true,'They fled in terror.'];}else{const d=roll(22)+10;g.hp-=d;return[false,'They attacked. -'+d+' HP.'];}},
+  ]},
+  {text:'A locked iron door. Treasure or doom lies beyond.',choices:['Break it down (STR)','Pick the lock (AGI+WIS)','Use a key (guaranteed)'],resolve:[
+    g=>{const ok=rng()<Math.min(.8,g.str/(g.str+8));if(ok){const gd=roll(40)+20;g.gold+=gd;const art=rng()<.35;if(art)g.artifacts++;return[true,'Smashed through! +'+gd+' gold'+(art?', +1 artifact!':'.')]; }else{const d=roll(20)+5;g.hp-=d;return[false,'Solid iron. -'+d+' HP.'];}},
+    g=>{const ok=rng()<Math.min(.8,(g.agi+g.wis)/(g.agi+g.wis+12));if(ok){const gd=roll(35)+15;g.gold+=gd;return[true,'Lock picked. +'+gd+' gold.'];}else{const d=roll(10);g.hp-=d;return[false,'Trap in the lock! -'+d+' HP.'];}},
+    g=>{if((g.dungeon.keys||0)>0){g.dungeon.keys--;const gd=roll(50)+25;g.gold+=gd;const art=rng()<.45;if(art)g.artifacts++;return[true,'Key works. +'+gd+' gold'+(art?', +1 artifact!':'.')]; }else{return[false,'No keys on you.'];}},
+  ]},
+  {text:'A wounded thrall of a rival vampire is chained here.',choices:['Free and recruit (20 blood)','Drain them (+blood,+XP)','Leave'],resolve:[
+    g=>{if(g.blood<20){return[false,'Not enough blood.'];}g.blood-=20;const m={name:pick(['Aldric','Mireille','Oswin','Briar','Serena']),type:pick(['Brawler','Assassin','Scout','Spy']),power:roll(12)+8+g.tier*2,nights:0,hp:55,maxHp:55,lieutenant:false,bonded:false};g.coven.push(m);return[true,m.name+' the '+m.type+' joins your coven (power '+m.power+').'];},
+    g=>{const b=roll(30)+15;addBlood(b);addXP(22);changeSanity(-10);return[true,'Drained. +'+b+' blood, +22 XP.'];},
+    g=>{addXP(5);return[true,'Left them.'];},
+  ]},
+  {text:'A dark altar pulses with blood energy.',choices:['Perform ritual (30 blood)','Smash it (risky)','Study it (+WIS risk)'],resolve:[
+    g=>{if(g.blood<30){return[false,'Need 30 blood.'];}g.blood-=30;const x=65+roll(35);addXP(x);changeSanity(-12);return[true,'Black fire erupts. +'+x+' XP.'];},
+    g=>{if(rng()<.5){const d=roll(22)+10;g.hp-=d;addInfamy(8);return[false,'Explosion! -'+d+' HP.'];}else{const b=roll(25);addBlood(b);addXP(18);return[true,'Shards burst with blood. +'+b+' blood, +18 XP.'];}},
+    g=>{if(rng()<.6+g.wis*.025){g.wis=Math.min(20,g.wis+1);addXP(25);return[true,'+1 WIS, +25 XP.'];}else{changeSanity(-18);return[false,'Visions overwhelmed. -18 sanity.'];}},
+  ]},
+  {text:'A hidden cache — could be trapped.',choices:['Grab quickly (AGI)','Disarm carefully (WIS)','Skip it'],resolve:[
+    g=>{if(rng()<Math.min(.8,g.agi/(g.agi+8))){const gd=roll(30)+10;g.gold+=gd;const art=rng()<.3;if(art)g.artifacts++;return[true,'Got it! +'+gd+' gold'+(art?', artifact!':'.')]; }else{const d=roll(25)+10;g.hp-=d;return[false,'Triggered! -'+d+' HP.'];}},
+    g=>{if(rng()<Math.min(.85,g.wis/(g.wis+8))){const gd=roll(35)+12;g.gold+=gd;if(rng()<.35)g.dungeon.keys++;return[true,'Disarmed. +'+gd+' gold'+(rng()<.35?', key!':'.')]; }else{const d=roll(15)+5;g.hp-=d;return[false,'Not enough care. -'+d+' HP.'];}},
+    g=>{return[true,'Passed it by.'];},
+  ]},
+  {text:'A ghostly elder vampire bars your way.',choices:['Challenge it (STR+WIS)','Speak old tongue (CHA+WIS)','Flee down a side passage'],resolve:[
+    g=>{const myP=g.str+g.wis+g.tier*3,eP=roll(20)+15;if(rng()<Math.min(.8,myP/(myP+eP))){const x=80+roll(40);addXP(x);addBlood(20);return[true,'Ghost dispersed. +'+x+' XP, +20 blood.'];}else{const d=roll(40)+20;g.hp-=d;changeSanity(-15);return[false,'Wrathful! -'+d+' HP, -15 sanity.'];}},
+    g=>{if(rng()<Math.min(.8,(g.wis+g.cha)/(g.wis+g.cha+14))){const x=55+roll(30);addXP(x);g.dungeon.keys++;return[true,'Appeased. +'+x+' XP, +1 key.'];}else{changeSanity(-10);const d=roll(20);g.hp-=d;return[false,'Offended it. -'+d+' HP.'];}},
+    g=>{g.dungeon.floor=Math.max(1,g.dungeon.floor-1);return[true,'Retreated. Back to floor '+g.dungeon.floor+'.'];},
+  ]},
+  {text:'Ancient blood pools on the stone floor.',choices:['Drink deeply (-sanity)','Sip carefully (balanced)','Leave it (+XP restraint)'],resolve:[
+    g=>{const b=roll(40)+30;addBlood(b);changeSanity(-10);reduceHunger(40);return[true,'Ancient vitae! +'+b+' blood, hunger reduced.'];},
+    g=>{const b=roll(20)+10;addBlood(b);reduceHunger(20);addXP(15);return[true,'Controlled feed. +'+b+' blood, +15 XP.'];},
+    g=>{addXP(30);changeSanity(8);return[true,'You resist. +30 XP, +8 sanity.'];},
+  ]},
+  {text:'Rubble blocks the passage.',choices:['Force through (-5 HP certain)','Climb over (AGI)','Search alternate path (WIS)'],resolve:[
+    g=>{g.hp-=5;return[true,'Heaved through. -5 HP.'];},
+    g=>{if(rng()<Math.min(.85,g.agi/(g.agi+7))){return[true,'Scrambled over cleanly.'];}else{const d=roll(15)+5;g.hp-=d;return[false,'Slipped. -'+d+' HP.'];}},
+    g=>{if(rng()<.55+g.wis*.02){addXP(15);return[true,'Found hidden passage. +15 XP.'];}else{g.hp-=5;return[true,'Dead end. Forced through. -5 HP.'];}},
+  ]},
+];
+const DG_BOSSES=[
+  {text:'BOSS: A veteran vampire hunter loaded with holy relics awaits at the altar.',choices:['Fight to the death (STR+AGI)','Blood sorcery assault (40 blood, WIS)','Flee the dungeon'],resolve:[
+    g=>{const myP=g.str+g.agi+g.tier*4,eP=roll(25)+20+(g.infamy>60?10:0);if(rng()<Math.min(.82,myP/(myP+eP))){const x=120+roll(60);g.kills++;g.hunter_kills++;addXP(x);addBlood(25);addInfamy(-15);g.trophies++;return[true,'Hunter FALLS! +'+x+' XP, +25 blood, -15 infamy, +1 Trophy!'];}else{const d=roll(50)+25;g.hp-=d;return[false,'Silver blade! -'+d+' HP.'];}},
+    g=>{if(g.blood<40){return[false,'Need 40 blood.'];}g.blood-=40;if(rng()<Math.min(.82,g.wis*.06+.4+g.tier*.06)){const x=110+roll(50);addXP(x);g.hunter_kills++;addInfamy(-12);g.trophies++;return[true,'Black fire! +'+x+' XP, +1 Trophy!'];}else{const d=roll(35)+10;g.hp-=d;return[false,'Relic resisted. -'+d+' HP.'];}},
+    g=>{return[false,'You flee. Boss remains for next time.'];},
+  ]},
+  {text:'BOSS: A Wraith-Lord enthroned on bones rises to face you.',choices:['Combat assault (STR+WIS)','Negotiate (CHA, risky)','Sacrifice a coven member to collapse ceiling'],resolve:[
+    g=>{const myP=g.str+g.wis+g.tier*5,eP=roll(28)+25;if(rng()<Math.min(.75,myP/(myP+eP))){const x=140+roll(70);addXP(x);g.artifacts++;g.trophies++;return[true,'Wraith-Lord shatters! +'+x+' XP, +1 Artifact, +1 Trophy!'];}else{const d=roll(55)+30;g.hp-=d;changeSanity(-20);return[false,'Overwhelming! -'+d+' HP, -20 sanity.'];}},
+    g=>{if(rng()<Math.min(.6,g.cha*.05+.25)){const gd=roll(60)+30;g.gold+=gd;g.dungeon.keys+=2;addXP(60);return[true,'Offers passage! +'+gd+' gold, 2 keys, +60 XP.'];}else{const d=roll(40)+20;g.hp-=d;changeSanity(-15);return[false,'It attacks! -'+d+' HP.'];}},
+    g=>{if(!g.coven.length){return[false,'No coven to sacrifice.'];}const w=g.coven.reduce((a,b)=>a.power<b.power?a:b);g.coven=g.coven.filter(m=>m!==w);const x=100+roll(50);addXP(x);g.artifacts++;g.trophies++;return[true,w.name+' sacrificed — ceiling collapses! +'+x+' XP, +1 Artifact, +1 Trophy!'];},
+  ]},
+  {text:'BOSS: An ancient vampire of immense power sits in silent contemplation.',choices:['Challenge their power (STR+tier)','Appeal to kinship (CHA+WIS)','Strike while ignored (AGI)'],resolve:[
+    g=>{const myP=g.str+g.tier*6,eP=roll(30)+25;if(rng()<Math.min(.7,myP/(myP+eP))){const x=160+roll(80);addXP(x);g.trophies++;addBlood(40);return[true,'Ancient yields! +'+x+' XP, +40 blood, +1 Trophy!'];}else{const d=roll(60)+35;g.hp-=d;changeSanity(-25);return[false,'Ancient power humbles you. -'+d+' HP.'];}},
+    g=>{if(rng()<Math.min(.72,(g.cha+g.wis)*.04+.3)){const x=90+roll(40),gd=roll(80)+40;addXP(x);g.trophies++;g.gold+=gd;return[true,'They remember kinship. +'+x+' XP, +'+gd+' gold, +1 Trophy!'];}else{const d=roll(30)+10;g.hp-=d;changeSanity(-15);return[false,'Dismissed. -'+d+' HP.'];}},
+    g=>{if(rng()<Math.min(.78,g.agi*.04+.35+g.tier*.05)){const x=130+roll(60);addXP(x);g.trophies++;return[true,'Perfect ambush! +'+x+' XP, +1 Trophy!'];}else{const d=roll(50)+25;g.hp-=d;return[false,'Ancient reflexes! -'+d+' HP.'];}},
+  ]},
+];
 
-}); // end window.load
+function renderDungeonSelect(){
+  if(!G)return;const el=document.getElementById('dg-list');if(!el)return;
+  if(G.dungeon){document.getElementById('dungeon-select').style.display='none';document.getElementById('dungeon-active').style.display='block';renderDungeonActive();return;}
+  document.getElementById('dungeon-select').style.display='block';document.getElementById('dungeon-active').style.display='none';
+  el.innerHTML=DUNGEONS.map(dg=>{
+    const cl=(G.dungeonCleared||[]).includes(dg.id),stars='★'.repeat(dg.difficulty)+'☆'.repeat(3-dg.difficulty);
+    return '<div class="card" style="margin-bottom:.5rem;border-color:'+(cl?'var(--gold)':'var(--border)')+'">'+
+      '<div style="font-size:.72rem;color:'+(cl?'var(--gold)':'var(--text)')+'">'+dg.name+(cl?' ✓ CLEARED':'')+'</div>'+
+      '<div style="font-size:.48rem;color:var(--muted)">'+stars+' · '+dg.floors+' floors</div>'+
+      '<div style="font-size:.52rem;color:var(--muted);margin:.2rem 0">'+dg.desc+'</div>'+
+      '<button class="abtn '+(dg.difficulty===3?'d':dg.difficulty===2?'':'s')+'" style="width:100%;margin-top:.3rem" onclick="startDungeon(\''+dg.id+'\')">'+
+        (cl?'Delve Again':'Enter Dungeon')+'<span class="ac">Boss on floor '+dg.floors+'</span></button></div>';
+  }).join('');
+}
+function startDungeon(id){
+  if(!G)return;const dg=DUNGEONS.find(d=>d.id===id);if(!dg)return;
+  if(!G.dungeonCleared)G.dungeonCleared=[];if(!G.mapControl)G.mapControl={};
+  G.dungeon={id:dg.id,name:dg.name,floor:1,maxFloor:dg.floors,difficulty:dg.difficulty,keys:0,phase:'event',currentEvent:null};
+  document.getElementById('dungeon-select').style.display='none';document.getElementById('dungeon-active').style.display='block';
+  document.getElementById('dg-log').innerHTML='';
+  dlog('Descending into '+dg.name+'...','night');dlog('Floor 1 of '+dg.maxFloor+'. Boss awaits below.','info');
+  nextDungeonEvent();
+}
+function nextDungeonEvent(){
+  if(!G||!G.dungeon)return;const dg=G.dungeon;
+  if(dg.floor>=dg.maxFloor){dg.phase='boss';dg.currentEvent=pick(DG_BOSSES);renderDungeonActive();return;}
+  dg.phase='event';dg.currentEvent=pick(DG_EVENTS);renderDungeonActive();
+}
+function renderDungeonActive(){
+  if(!G||!G.dungeon)return;const dg=G.dungeon;
+  document.getElementById('dg-name').textContent=dg.name;
+  document.getElementById('dg-floor').textContent=dg.floor+(dg.phase==='boss'?' — BOSS':'');
+  document.getElementById('dg-hp').textContent=G.hp+'/'+G.maxHp;
+  document.getElementById('dg-blood').textContent=G.blood+'/'+G.maxBl;
+  document.getElementById('dg-keys').textContent=dg.keys||0;
+  const ev=dg.currentEvent;if(!ev)return;
+  document.getElementById('dg-event').innerHTML='<span style="color:var(--gold)">'+(dg.phase==='boss'?'BOSS: ':'Floor '+dg.floor+': ')+'</span>'+ev.text;
+  ['dg-btn1','dg-btn2','dg-btn3'].forEach((id,i)=>{if(ev.choices[i])document.getElementById(id).textContent=ev.choices[i];});
+}
+function dungeonChoice(idx){
+  if(!G||!G.dungeon)return;const dg=G.dungeon,ev=dg.currentEvent;if(!ev||!ev.resolve[idx])return;
+  const[success,msg]=ev.resolve[idx](G);
+  dlog(msg,success?'good':'bad');toast(success?'Success!':'Failed',success?'good':'bad');
+  if(G.hp<=0){if(G.wardHP>0){G.hp=1;G.wardHP=0;dlog('Blood ward shattered — saved your life!','crit');}else{dlog('You collapse...','bad');dungeonEscape(false);return;}}
+  if(dg.phase==='boss'&&success&&idx!==2){
+    if(!G.dungeonCleared.includes(dg.id))G.dungeonCleared.push(dg.id);
+    const bx=dg.difficulty*40,bg_=dg.difficulty*25;addXP(bx);G.gold+=bg_;
+    dlog('DUNGEON CLEARED! +'+bx+' XP, +'+bg_+' gold.','crit');toast('Dungeon Cleared!','crit');
+    setTimeout(()=>dungeonEscape(true),500);return;
+  }
+  if(dg.phase==='boss'&&idx===2){dungeonEscape(false);return;}
+  if(success){dg.floor++;if(dg.floor>=dg.maxFloor)dlog('Final floor reached. Something stirs...','crit');else dlog('Floor '+dg.floor+'...','info');}
+  G.hunger=Math.min(100,G.hunger+3);G.blood=Math.max(0,G.blood-4);
+  if(G.hunger>=95){const d=roll(8);G.hp-=d;dlog('Blood famine underground! -'+d+' HP.','bad');}
+  renderAll();setTimeout(nextDungeonEvent,150);
+}
+function dungeonRetreat(){if(!G||!G.dungeon)return;dlog('Retreating from '+G.dungeon.name+'.','info');dungeonEscape(false);}
+function dungeonEscape(victory){
+  if(!G||!G.dungeon)return;const nm=G.dungeon.name,fl=G.dungeon.floor;
+  log((victory?'CLEARED: ':'Retreated from: ')+nm+' (floor '+fl+')',victory?'crit':'info');
+  if(victory&&G.mapControl)G.mapControl[G.dungeon.id]=(G.mapControl[G.dungeon.id]||0)+5;
+  G.dungeon=null;
+  document.getElementById('dungeon-select').style.display='block';document.getElementById('dungeon-active').style.display='none';
+  renderDungeonSelect();renderAll();if(checkDeath('Perished escaping the dungeon.'))return;
+}
+function dlog(msg,ty){
+  const box=document.getElementById('dg-log');if(!box)return;
+  const d=document.createElement('div');const cols={crit:'var(--gold)',bad:'var(--orange)',good:'var(--crimson)',night:'#5aacee'};
+  d.style.cssText='border-left:2px solid '+(cols[ty]||'var(--border)')+';padding-left:.3rem;margin-bottom:.16rem;color:'+(ty==='bad'?'#c07030':ty==='crit'?'var(--gold)':ty==='good'?'var(--text)':'var(--muted)');
+  d.textContent=msg;box.appendChild(d);box.scrollTop=box.scrollHeight;
+}
+
+// ═══════════════════════════════════════
+// SURVIVAL ENHANCEMENTS
+// ═══════════════════════════════════════
+function tickSurvival(){
+  if(!G||dead)return;
+  if(!G.mapControl)G.mapControl={};if(!G.dungeonCleared)G.dungeonCleared=[];
+  if(G.exposure===undefined)G.exposure=0;if(G.bloodRot===undefined)G.bloodRot=0;
+  const shelterQ=G.lairLvl||1;
+  if(shelterQ<2&&G.infamy>50){G.exposure=Math.min(100,(G.exposure)+8);if(G.exposure>50&&G.exposure<58)log('Your crude shelter barely holds back the creeping dawn.','bad');}
+  else{G.exposure=Math.max(0,G.exposure-6);}
+  if(G.exposure>=80){const d=roll(12)+5;G.hp=Math.max(0,G.hp-d);log('Dawn exposure seeps through! -'+d+' HP.','bad');changeSanity(-8);if(checkDeath('Destroyed by dawn exposure.'))return;}
+  if(G.blood<15){G.bloodRot=Math.min(100,G.bloodRot+15);if(G.bloodRot>60&&G.bloodRot<75)log('Blood rot sets in. Your flesh begins to wither.','bad');}
+  else{G.bloodRot=Math.max(0,G.bloodRot-10);}
+  if(G.bloodRot>=85){const d=roll(15)+8;G.hp=Math.max(0,G.hp-d);log('Blood rot consumes you! -'+d+' HP. FEED NOW.','bad');if(checkDeath('Withered from blood rot.'))return;}
+  if(G.hunger>=92){const d=7;G.hp=Math.max(0,G.hp-d);log('Starvation ravages you as you rest. -'+d+' HP.','bad');if(checkDeath('Died of starvation hunger.'))return;}
+  for(const id in G.mapControl){G.mapControl[id]=Math.max(0,G.mapControl[id]-1);if(!G.mapControl[id])delete G.mapControl[id];}
+  if((G.lairLvl||1)>=3){G.hp=Math.min(G.maxHp,G.hp+Math.floor(G.lairLvl*1.5));}
+  const bonded=(G.coven||[]).filter(m=>m.bonded&&m.power>15).length;
+  if(bonded>=2&&rng()<.35){const ag=bonded*roll(4)+5;G.gold+=ag;log('Bonded coven gathered '+ag+' gold while you rested.','info');}
+  renderSurvivalBars();
+}
+function renderSurvivalBars(){
+  if(!G)return;
+  const exp=G.exposure||0,rot=G.bloodRot||0;
+  const be=document.getElementById('bar-exposure');if(be)be.style.width=Math.min(100,exp)+'%';
+  const br=document.getElementById('bar-rot');if(br)br.style.width=Math.min(100,rot)+'%';
+  const ue=document.getElementById('ui-exposure');if(ue)ue.textContent=Math.round(exp)+'/100';
+  const ur=document.getElementById('ui-rot');if(ur)ur.textContent=Math.round(rot)+'/100';
+}
+(function(){const s=document.createElement('style');s.textContent='.f-exp{background:linear-gradient(to right,#3a2000,#c97030)}.f-rot{background:linear-gradient(to right,#200030,#8e44ad)}';document.head.appendChild(s);})();
+(function injectBars(){
+  const pane=document.getElementById('pane-status');if(!pane){setTimeout(injectBars,300);return;}
+  if(document.getElementById('survival-bars'))return;
+  const div=document.createElement('div');div.id='survival-bars';div.className='card';div.style.marginTop='.4rem';
+  div.innerHTML='<div class="ptitle">Survival Pressures</div><div class="srow"><div class="slbl"><span>Exposure</span><span class="sval" id="ui-exposure">0/100</span></div><div class="track"><div class="fill f-exp" id="bar-exposure" style="width:0%"></div></div></div><div class="srow"><div class="slbl"><span>Blood Rot</span><span class="sval" id="ui-rot">0/100</span></div><div class="track"><div class="fill f-rot" id="bar-rot" style="width:0%"></div></div></div><div style="font-size:.44rem;color:var(--muted);margin-top:.28rem;line-height:1.5">Exposure: weak lair + high infamy forces you into the open.<br>Blood Rot: critically low blood withers your undead flesh.<br>Both drain HP per night if unmanaged.</div>';
+  const cards=pane.querySelectorAll('.card');if(cards.length>=2)pane.insertBefore(div,cards[2]||null);else pane.appendChild(div);
+})();
+(function patchNxt(){
+  if(typeof nxt==='undefined'){setTimeout(patchNxt,100);return;}
+  const orig=nxt;window.nxt=function(){orig();if(G&&!dead)tickSurvival();};
+})();
+function claimTerritory(locId,nights){
+  if(!G)return;if(!G.mapControl)G.mapControl={};
+  G.mapControl[locId]=(G.mapControl[locId]||0)+nights;
+  addWE('Your influence now extends to '+(MAP_LOCS.find(l=>l.id===locId)||{name:locId}).name+' ('+G.mapControl[locId]+' nights).');
+}
 </script>
 
 </body>
